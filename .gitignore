@@ -1,0 +1,9 @@
+inbox/*
+out/*
+!inbox/.gitkeep
+!out/.gitkeep
+*.pyc
+__pycache__/
+.venv/
+evals/runs/
+.DS_Store
