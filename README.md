@@ -3,7 +3,8 @@
 **A ward handover agent: photographs of paper notes in, a structured SBAR handoff plus a gap
 list out, unattended, on one machine, with a kill switch.**
 
-Status: **pre-work only.** No product code lives here yet, deliberately — see the rule below.
+Status: **pre-work only.** Design, work orders and test data are committed; product code is
+written only inside the window — see the rule below.
 
 ---
 
@@ -35,9 +36,21 @@ project code to be **written inside the 72-hour window**.
 | This spec, architecture, demo script | Working product code |
 | Synthetic handoff cases (data) | A functioning pipeline |
 | Evaluation rubric, kill-switch test plan | Anything that runs end to end |
+| Soldier work orders, permissions table | Scripts, prototypes, mockups (code is code) |
 
-So what you find here is **the whole design and the test data**, and nothing that executes.
-At 23:00 on 27 November the window opens and this becomes assembly, not discovery.
+So what you find here is **the whole design, the work orders and the test data**, and nothing
+that executes. At 23:00 on 27 November the window opens and this becomes assembly, not discovery.
+
+## Setup (skeleton — filled during the window)
+
+```bash
+cp .env.example .env      # paths + limits only; no cloud keys exist in this project
+mkdir -p inbox out
+# requirements and the run command land here during the window — they cannot be
+# written before kickoff without shipping pre-window code
+```
+
+Permissions and prohibitions are enforced in code, not by prompting — see `PERMISSIONS.md`.
 
 ## Read in this order
 
@@ -46,7 +59,10 @@ At 23:00 on 27 November the window opens and this becomes assembly, not discover
 3. `EVALS.md` — the 40-case trap pack, and what a pass looks like.
 4. `DEMO-SCRIPT.md` — 90 seconds, shot by shot.
 5. `RUNBOOK.md` — the 72-hour calendar with gates.
-6. `fixtures/cases.json` — ten synthetic handoffs, three deliberately broken.
+6. `work-orders/` — the three soldier briefs (ingestion / structuring / guardrails), written
+   before the window so kickoff starts with dispatch.
+7. `PERMISSIONS.md` — the enforced permissions table.
+8. `fixtures/cases.json` — forty synthetic handoffs, twenty deliberately broken.
 
 ## Non-negotiables
 
