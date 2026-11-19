@@ -39,3 +39,29 @@ OCR'd offline).
 
 Work orders 01–03 are now dispatchable with exact engine settings. The event's first
 session can start with `ingest.py` against a known-good configuration instead of tuning.
+
+## Real-capture validation — 19 Nov 2026 (evidence update)
+
+Re-run of the rehearsal on 40 REAL photographed ward-paperwork pages from the user's phone
+harvest (`~/phone-harvest/safe_test/`, privacy-safe subset; aggregate-only report at
+`~/agentware/reports/real-capture-validation.md`). Findings:
+
+1. **Printed-text config does not comprehend real handwriting.** 0/40 pages empty, mean
+   confidence 0.86, but median yield only ~699 characters — ink detected everywhere, text
+   returned short and fragmented. Detection survives; comprehension does not.
+2. **Identity is the failure point.** Strict MR label on 4/40 pages; the structural refusal
+   rule fired on 27/40 (68%) — safe, but blunt enough to reject genuine notes.
+3. **`use_cls` is not a free toggle on real captures:** flipping it alone dropped text
+   agreement below 60% on 4/40 pages (as low as 14%).
+
+**Decision (this is the re-run the freeze clause requires):**
+- Keep the frozen OCR config for PRINTED text (validated: 1.2% CER).
+- **Handwritten pages are refused-and-flagged in v1, not parsed.** The gap list names them;
+  the handoff never invents their content. This is an honest, documented limit — and it is
+  exactly the behaviour the rubric rewards ("here is the failure mode we did not fix").
+- A local vision-model lane for handwriting is explicitly OUT of v1 scope (scope-creep
+  risk); it is the natural post-event extension and a Near Miss write-up candidate.
+- Caveat: the corpus classified 0 PROGRESS / 8 FOLDER / 13 SHIFA_DOC / 19 OTHER — true
+  progress-note pages were not isolated, so the 68% refusal rate is corpus-mixed, not a
+  pure handwriting rate.
+
