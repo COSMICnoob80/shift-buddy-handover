@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "note": "Synthetic handoff cases. All names, bed numbers and MRNs are invented. Forty of forty; twenty deliberately broken (handwriting, contradiction, missing field, unreadable page, adversarial injection, duplicate patient, bed reuse, scrambled page order, ambiguous day count).",
+  "note": "Synthetic handoff cases. All names, bed numbers and MRNs are invented. Forty of forty; twenty-seven deliberately broken (handwriting, contradiction, missing field, unreadable page, adversarial injection, duplicate patient, bed reuse, scrambled page order, ambiguous day count): 10 must be refused outright, 17 must be handled correctly without refusal.",
   "cases": [
     {
       "id": "C-001",
