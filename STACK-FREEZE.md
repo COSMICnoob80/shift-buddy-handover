@@ -65,3 +65,30 @@ harvest (`~/phone-harvest/safe_test/`, privacy-safe subset; aggregate-only repor
   progress-note pages were not isolated, so the 68% refusal rate is corpus-mixed, not a
   pure handwriting rate.
 
+## Vision-lane feasibility test — 23 Nov 2026 (evidence update, closes the open decision)
+
+The local vision-model lane was tested and **rejected on measured evidence**, not on
+assumption. Setup: Qwen3-VL-2B-Instruct (official GGUF, 1.9 GB) served locally by
+Ollama 0.40.17 on this machine (i5-1235U, 15 GB RAM, no GPU), reading real pages from
+`~/phone-harvest/safe_test/` (raw transcriptions stayed local; aggregate numbers only).
+
+| Probe | Result |
+|---|---|
+| Batch probe (6 real pages) | 0/6 completed — script's 600 s/page timeout exceeded on every page |
+| Single page, ollama default threads | 625.9 s (vision encode dominates; ollama used 2 threads) |
+| Single page, tuned `num_thread: 8` | **308.1 s** — still ~20× over the < 5 min / 20 patients budget |
+| Output quality, tuned run | **89 chars in 32 tokens**: transcribed only the printed letterhead, never reached the handwriting, stopped early (`done_reason: length`) |
+
+**Decision (final for v1):**
+- **Handwriting pages: refuse-and-flag. Confirmed.** The vision lane fails BOTH gates —
+  it is ~20× too slow for the batch budget, and at 2B scale it does not comprehend
+  handwritten ward notes on phone photos. Both numbers above are the evidence.
+- Clean handwriting number for the honest-limits section: on the 17 isolated true
+  progress notes, OCR recovers identity on 0/17 and refuses 13/17 (76%);
+  `~/agentware/reports/progress-note-isolation.md`.
+- Post-event extensions (documented, not promised): GOT-OCR2.0 (716 M specialist, ~4×
+  smaller, CPU path exists), PaddleOCR-VL-0.9B (CER 0.045), crop-to-handwriting
+  preprocessing, or any GPU. Free cloud vision APIs remain excluded: Google's terms
+  forbid sensitive personal data and permit human review of inputs — PHI may not leave
+  the machine.
+
