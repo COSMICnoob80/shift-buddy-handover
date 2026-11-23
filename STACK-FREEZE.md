@@ -79,6 +79,14 @@ Ollama 0.40.17 on this machine (i5-1235U, 15 GB RAM, no GPU), reading real pages
 | Single page, tuned `num_thread: 8` | **308.1 s** — still ~20× over the < 5 min / 20 patients budget |
 | Output quality, tuned run | **89 chars in 32 tokens**: transcribed only the printed letterhead, never reached the handwriting, stopped early (`done_reason: length`) |
 
+**Follow-up bounded tests (23–24 Nov) closed every remaining lane — see
+`~/agentware/reports/got-ocr2-test.md` for the full table:**
+- PaddleOCR-VL-0.9B: 535 s/page (best text yield: 1701 chars) — speed-only fail.
+- GOT-OCR2.0 specialist (580 M, official weights, CPU-patched): no page completed within
+  a 60-minute cap — dead on this hardware.
+- Preprocessing ladder (grayscale/crop/upscale/sharpen × 17 progress notes): identity
+  0/17 on every variant — preprocessing is not the bottleneck.
+
 **Decision (final for v1):**
 - **Handwriting pages: refuse-and-flag. Confirmed.** The vision lane fails BOTH gates —
   it is ~20× too slow for the batch budget, and at 2B scale it does not comprehend
