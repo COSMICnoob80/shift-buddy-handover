@@ -40,6 +40,17 @@ pages processed, cost so far, and a live kill-switch button that writes the `STO
 No diagnosis, no dose suggestion, no sending anywhere, no fabricated field, no running past
 a kill signal, no patient data leaving the machine.
 
+## 6. Assisted mode (opt-in, gap resolution) — build AFTER core, if window time allows
+
+The unattended path stays 100% local — assisted mode is a separate, explicit lane:
+- A refused page appears in the gap list with its crop beside the flag.
+- One human tap resolves it: either the user types/corrects the fields themselves
+  (preferred, zero egress), or the user explicitly triggers a single-page cloud call
+  with their own key. The audit entry records `resolved_by: human` — never
+  `machine_read`. The handoff marks those fields as human-confirmed, not OCR-extracted.
+- Default state: OFF. Nothing may auto-send anything, ever. No batch cloud calls.
+- Verify: a test proves that with assisted mode untouched, zero network calls occur.
+
 ## Done when
 - The verifier fails a deliberately poisoned composition (prove it with a test).
 - The kill switch is proven < 2s with the audit intact (prove it with a test).
