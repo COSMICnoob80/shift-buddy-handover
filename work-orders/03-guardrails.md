@@ -42,14 +42,22 @@ a kill signal, no patient data leaving the machine.
 
 ## 6. Assisted mode (opt-in, gap resolution) — build AFTER core, if window time allows
 
+Capability evidence (24 Nov): the operator's provider vision transcribed two synthetic
+handwriting fixtures verbatim-exact, preserving `[?]` marks and refusing to normalise
+`c?f?axone`. The masked-body mechanism below is the design; full spec in SAFETY.md
+("Assisted mode").
+
 The unattended path stays 100% local — assisted mode is a separate, explicit lane:
 - A refused page appears in the gap list with its crop beside the flag.
-- One human tap resolves it: either the user types/corrects the fields themselves
-  (preferred, zero egress), or the user explicitly triggers a single-page cloud call
-  with their own key. The audit entry records `resolved_by: human` — never
-  `machine_read`. The handoff marks those fields as human-confirmed, not OCR-extracted.
-- Default state: OFF. Nothing may auto-send anything, ever. No batch cloud calls.
-- Verify: a test proves that with assisted mode untouched, zero network calls occur.
+- Identity (BED/MRN/printed name) is read LOCALLY from the printed header; a
+  deterministic mask blacks out identity regions by stored coordinates. Only the body
+  crop may ever leave the machine, and only on one explicit human tap (single page,
+  operator's own provider account; batch sends prohibited; default OFF; test proves
+  zero network calls when the toggle is untouched).
+- Results re-associate deterministically by `page_id` + region map; the audit entry
+  records `resolved_by: human` — never `machine_read`. The handoff marks those fields
+  as human-confirmed, not OCR-extracted.
+- Residual risk stated in SAFETY.md: handwriting inside the body cannot be pre-masked.
 
 ## Done when
 - The verifier fails a deliberately poisoned composition (prove it with a test).

@@ -29,6 +29,28 @@ kill-switch button that writes the `STOP` file.
 per-field confidence, refusals with reasons, start/stop timestamps, kill-switch events.
 A human can reconstruct and replay any run from it alone.
 
+## Assisted mode — opt-in gap resolution (added 24 Nov, after the vision-lane evidence)
+
+The **unattended path remains 100% local**: no network egress, enforced by the permission
+test (network egress 0 bytes). Assisted mode is a separate, human-initiated lane:
+
+- A refused page surfaces in the gap list with its crop beside the flag.
+- **Identity stays local:** BED / MRN / printed name are read locally from the printed
+  header (100% recall, rehearsal-verified). A deterministic mask blacks out identity
+  regions by stored coordinates before anything leaves the machine.
+- Only with **one explicit human tap** may a single body crop be sent to a cloud vision
+  model (the operator's own provider account). Batch sends are prohibited; the default
+  state is OFF; the test proves zero network calls when the toggle is untouched.
+- Results re-associate deterministically by `page_id` + region map. The audit records
+  `resolved_by: human` — never `machine_read` — and the handoff marks those fields as
+  human-confirmed, not OCR-extracted.
+- Honest residual risk (stated, not hidden): text a doctor wrote inside the handwriting
+  body (a name, a date) cannot be pre-masked, because finding it requires reading it.
+  This is why the lane is opt-in per page.
+- Capability evidence: the operator's provider vision read two synthetic handwriting
+  fixtures verbatim-exact including the `[?]`-for-illegible discipline (2026-11-24,
+  transcriptions match fixture ground truth; logs in the rehearsal directory).
+
 ## Failure behaviour
 Model unavailable → deterministic extraction only, narrative marked `UNAVAILABLE`, exit 0,
 never hang. Unreadable page → recorded, run continues, surfaced in the gap list.
