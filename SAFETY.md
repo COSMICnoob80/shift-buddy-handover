@@ -44,9 +44,13 @@ test (network egress 0 bytes). Assisted mode is a separate, human-initiated lane
 - Results re-associate deterministically by `page_id` + region map. The audit records
   `resolved_by: human` — never `machine_read` — and the handoff marks those fields as
   human-confirmed, not OCR-extracted.
-- Honest residual risk (stated, not hidden): text a doctor wrote inside the handwriting
-  body (a name, a date) cannot be pre-masked, because finding it requires reading it.
-  This is why the lane is opt-in per page.
+- Honest residual risk (stated, not hidden): text written inside the handwriting body
+  cannot be pre-masked, because finding it requires reading it. First real-page test
+  (P27, 25 Nov) proved this cuts both ways: **no patient identifier leaked**, but
+  **clinician identifiers did** (doctor names, an internal extension, staff number,
+  signature scribbles). Mitigation: the human sees the crop before tapping (consent is
+  per-page and informed), the transcription pass reports leaks after the fact, and the
+  audit records the leak class alongside `resolved_by: human`.
 - Capability evidence: the operator's provider vision read two synthetic handwriting
   fixtures verbatim-exact including the `[?]`-for-illegible discipline (2026-11-24,
   transcriptions match fixture ground truth; logs in the rehearsal directory).
