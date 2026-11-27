@@ -8,7 +8,15 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-PY=".venv/bin/python"
+if [ -x "$REPO_ROOT/.venv/bin/python" ]; then
+  PY="$REPO_ROOT/.venv/bin/python"
+else
+  PY="$(command -v python3 || command -v python)"
+fi
+if [ -z "${PY:-}" ]; then
+  echo "FAIL: no python interpreter found (tried .venv/bin/python, python3, python)" >&2
+  exit 1
+fi
 CASES="fixtures/cases.json"
 DATE="2026-11-28"
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
