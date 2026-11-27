@@ -70,16 +70,32 @@ def _load_modules() -> dict:
     return loaded
 
 
-def _unreadable_pages(pages: list, fields_doc: dict | None = None) -> list:
-    found = {
-        page.get("page")
-        for page in pages or []
-        if isinstance(page, dict) and page.get("readable") is False
-    }
+def _unreadable_details(pages: list, fields_doc: dict | None = None) -> list:
+    """Unreadable pages as ``{"page": n, "reason": why}`` — the reason is kept.
+
+    ``summary.json`` and ``status.json`` still carry bare page numbers (see
+    :func:`_unreadable_pages`); this richer form is what ``compose_gaps`` needs
+    to say *why* a page could not be read, not just which page it was.
+    """
+    reasons: dict = {}
+    for page in pages or []:
+        if isinstance(page, dict) and page.get("readable") is False:
+            number = page.get("page")
+            if number is not None:
+                reasons.setdefault(number, page.get("refusal_reason"))
     for page in (fields_doc or {}).get("pages") or []:
         if isinstance(page, dict) and page.get("unreadable") is True:
-            found.add(page.get("page"))
-    return sorted(p for p in found if p is not None)
+            number = page.get("page")
+            if number is not None and not reasons.get(number):
+                reasons[number] = page.get("refusal_reason")
+    return [
+        {"page": number, "reason": reasons[number] or "unreadable"}
+        for number in sorted(reasons)
+    ]
+
+
+def _unreadable_pages(pages: list, fields_doc: dict | None = None) -> list:
+    return [detail["page"] for detail in _unreadable_details(pages, fields_doc)]
 
 
 def _merge_injections(*sources: list) -> list:
@@ -167,7 +183,7 @@ def _run_once(
         pages_doc = modules["ingest"](str(inbox), stop=stop)
     except Exception as exc:
         out_dir = out_root / (date_override or _today())
-        audit = Audit(str(out_dir))
+        audit = Audit(str(out_dir), root=str(out_root))
         audit.run_start(_now(), _shift(out_dir.name), [], _model_label())
         audit.run_end(
             _now(), "error", {"stage": "ingest", "error": f"{type(exc).__name__}: {exc}"}
@@ -180,7 +196,7 @@ def _run_once(
     shift_date = date_override or pages_doc.get("shift_date") or _today()
     run_id = pages_doc.get("run_id") or started_at
     out_dir = out_root / shift_date
-    audit = Audit(str(out_dir))
+    audit = Audit(str(out_dir), root=str(out_root))
     model = _model_label()
     shift = _shift(shift_date)
     audit.run_start(run_id, shift, pages, model)
@@ -197,6 +213,7 @@ def _run_once(
         "contradictions": [],
         "injections": [],
         "unreadable_pages": _unreadable_pages(pages),
+        "unreadable_details": _unreadable_details(pages),
         "gaps": [],
     }
     handoff_path = out_dir / "handoff.md"
@@ -220,7 +237,7 @@ def _run_once(
             gaps_text = modules["compose_gaps"](
                 state["patients"],
                 state["contradictions"],
-                state["unreadable_pages"],
+                state["unreadable_details"],
                 state["injections"],
                 state["gaps"],
             )
@@ -264,6 +281,7 @@ def _run_once(
     try:
         fields_doc = modules["extract"](pages_doc)
         state["unreadable_pages"] = _unreadable_pages(pages, fields_doc)
+        state["unreadable_details"] = _unreadable_details(pages, fields_doc)
     except Exception as exc:
         finish("error", None, {"ok": None, "violations": [f"extract: {exc}"]})
         return 1

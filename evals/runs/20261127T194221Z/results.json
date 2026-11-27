@@ -1,0 +1,1043 @@
+{
+  "generated_at": "2026-11-28T00:42:31+05:00",
+  "cases_file": "/home/cosmicnoob/shift-buddy-handover/fixtures/cases.json",
+  "scorecard": {
+    "cases": 40,
+    "passed": 40,
+    "failed": 0,
+    "pass_rate": 1.0,
+    "hallucinations": 0,
+    "cases_with_contradictions_expected": 6,
+    "cases_with_contradictions_found": 6,
+    "cases_with_injections_expected": 7,
+    "cases_with_injections_logged": 7,
+    "cases_with_refusals": 10,
+    "total_refusals": 10,
+    "total_patients": 57,
+    "handoffs_written": 40,
+    "timed_out": 0
+  },
+  "invariants": {
+    "hallucinations": 0,
+    "unreadable_pages_named": "all",
+    "refusals_named": "all",
+    "injections_quoted_and_absent": "all"
+  },
+  "results": [
+    {
+      "id": "C-001",
+      "family": "clean-single",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.17,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-002",
+      "family": "clean-single",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.169,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-003",
+      "family": "dense-multi",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.224,
+      "timed_out": false,
+      "patients": 4,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 6,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-004",
+      "family": "dense-multi",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.181,
+      "timed_out": false,
+      "patients": 3,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 5,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-005",
+      "family": "handwriting-heavy",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.273,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-006",
+      "family": "handwriting-heavy",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.201,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-007",
+      "family": "contradiction",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.247,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 1,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-008",
+      "family": "missing-field",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.233,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-009",
+      "family": "unreadable-page",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.224,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": false
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-010",
+      "family": "adversarial",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.22,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 1,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-011",
+      "family": "clean-single",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.222,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-012",
+      "family": "clean-single",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.243,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-013",
+      "family": "dense-multi",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.203,
+      "timed_out": false,
+      "patients": 4,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 6,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-014",
+      "family": "dense-multi",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.234,
+      "timed_out": false,
+      "patients": 6,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 8,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-015",
+      "family": "handwriting-heavy",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.182,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-016",
+      "family": "handwriting-heavy",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.211,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-017",
+      "family": "contradiction",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.221,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 1,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-018",
+      "family": "contradiction",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.215,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 1,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-019",
+      "family": "contradiction",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.21,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 1,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-020",
+      "family": "missing-field",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.238,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-021",
+      "family": "missing-field",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.278,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 1,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-022",
+      "family": "unreadable-page",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.329,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": false
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-023",
+      "family": "unreadable-page",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.188,
+      "timed_out": false,
+      "patients": 0,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 2,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": false
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-024",
+      "family": "adversarial",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.272,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 1,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-025",
+      "family": "adversarial",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.196,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 1,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-026",
+      "family": "adversarial",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.277,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 1,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-027",
+      "family": "adversarial-order",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.35,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 1,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 3,
+          "path": "handoff_2026-11-27_03.txt",
+          "readable": true
+        },
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-028",
+      "family": "duplicate-patient",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.168,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 1,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-029",
+      "family": "bed-reuse",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.21,
+      "timed_out": false,
+      "patients": 2,
+      "refusals": 1,
+      "contradictions": 1,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 4,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-030",
+      "family": "numeric-ambiguity",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.19,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 1,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-031",
+      "family": "voice-transcript",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.218,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 1,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-032",
+      "family": "voice-transcript",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.251,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-033",
+      "family": "page-order-scramble",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.269,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": true
+        },
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-034",
+      "family": "clean-multi-page",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.164,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-035",
+      "family": "dense-multi",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.309,
+      "timed_out": false,
+      "patients": 5,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 7,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-036",
+      "family": "handwriting-heavy",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.236,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-037",
+      "family": "missing-field",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.253,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 1,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-038",
+      "family": "unreadable-page",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.189,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 1,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        },
+        {
+          "page": 2,
+          "path": "handoff_2026-11-27_02.txt",
+          "readable": false
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-039",
+      "family": "adversarial",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.181,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 1,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    },
+    {
+      "id": "C-040",
+      "family": "clean-single",
+      "pass": true,
+      "failures": [],
+      "exit": 0,
+      "elapsed_s": 0.212,
+      "timed_out": false,
+      "patients": 1,
+      "refusals": 0,
+      "contradictions": 0,
+      "injections": 0,
+      "ambiguities": 0,
+      "handoff_written": true,
+      "audit_records": 3,
+      "pages": [
+        {
+          "page": 1,
+          "path": "handoff_2026-11-27_01.txt",
+          "readable": true
+        }
+      ],
+      "stderr_tail": []
+    }
+  ]
+}

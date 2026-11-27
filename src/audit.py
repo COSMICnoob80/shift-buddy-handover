@@ -15,32 +15,33 @@ from pathlib import Path
 
 AUDIT_FILE = "audit.jsonl"
 AUDIT_VERSION = 1
-ANCHOR_NAME = "out"
 
 
 class AuditPathRefused(PermissionError):
-    """Raised when a write target is not inside out/."""
+    """Raised when a write target escapes the out root the caller anchored on."""
 
 
 def _now_precise() -> str:
     return datetime.now().astimezone().isoformat(timespec="milliseconds")
 
 
-def _anchor_for(directory: Path) -> Path | None:
-    for candidate in (directory, *directory.parents):
-        if candidate.name == ANCHOR_NAME:
-            return candidate
-    return None
+def _contains(root: Path, target: Path) -> bool:
+    """True when ``target`` is ``root`` or lives anywhere beneath it.
+
+    Both paths are already resolved, so ``..`` segments and symlinks have been
+    collapsed to their real targets before this comparison.
+    """
+    return target == root or root in target.parents
 
 
 class Audit:
     """Append-only writer. One ``run_start``, one record per patient, one ``run_end``."""
 
-    def __init__(self, out_dir: str):
+    def __init__(self, out_dir: str, root: str | None = None):
         self.dir = Path(out_dir).expanduser().resolve()
-        anchor = _anchor_for(self.dir)
-        if anchor is None:
-            raise AuditPathRefused(f"refusing audit directory outside out/: {self.dir}")
+        anchor = Path(root).expanduser().resolve() if root is not None else self.dir
+        if not _contains(anchor, self.dir):
+            raise AuditPathRefused(f"refusing audit directory outside {anchor}: {self.dir}")
         self.anchor = anchor
         self.dir.mkdir(parents=True, exist_ok=True)
         self.path = self._assert_inside(self.dir / AUDIT_FILE)
@@ -51,7 +52,7 @@ class Audit:
 
     def _assert_inside(self, path: str | Path) -> Path:
         target = Path(path).expanduser().resolve()
-        if target != self.anchor and self.anchor not in target.parents:
+        if not _contains(self.anchor, target):
             raise AuditPathRefused(f"refusing write outside {self.anchor}: {target}")
         return target
 

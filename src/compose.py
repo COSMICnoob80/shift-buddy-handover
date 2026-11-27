@@ -85,6 +85,21 @@ def _page(patient: dict, fallback=None):
     return patient.get("page", fallback)
 
 
+_NAME_REFUSED = "name not readable"
+
+
+def _heading_name(patient: dict) -> str:
+    """The name for the patient heading, or an explicit refusal marker.
+
+    A refused name must never be presented as if it were read, so an absent
+    name becomes ``NAME_REFUSED`` instead of the literal ``None``.
+    """
+    name = patient.get("name_as_written")
+    if name is None or not str(name).strip():
+        return _NAME_REFUSED
+    return str(name)
+
+
 def _patient_lines(patient: dict, shift: dict) -> list:
     bed = patient.get("bed")
     name = patient.get("name_as_written")
@@ -92,7 +107,8 @@ def _patient_lines(patient: dict, shift: dict) -> list:
     problem = patient.get("problem")
     problem_page = patient.get("problem_page") or page
     lines = []
-    lines.append(f"## Bed {bed} — {name} [p. {page}]")
+    bed_label = f"Bed {bed}" if bed is not None else "Bed not recorded"
+    lines.append(f"## {bed_label} — {_heading_name(patient)} [p. {page}]")
 
     who = []
     if bed is not None:
@@ -171,7 +187,7 @@ def compose(patients: list, contradictions: list, shift: dict) -> tuple[str, set
         for action in patient.get("actions") or []:
             action_count += 1
             text = action.get("text") or "action"
-            who = f"Bed {bed} {name}".strip()
+            who = f"Bed {bed} {name}".strip() if name else f"Bed {bed}"
             if action.get("due"):
                 lines.append(f"- {who}: {text} — due {action['due']} [p. {action.get('page', _page(patient))}]")
             else:

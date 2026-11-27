@@ -75,3 +75,46 @@ Permissions and prohibitions are enforced in code, not by prompting — see `PER
 
 One ward, one shift, one real handover produced from photographs in under five minutes, with a
 gap list a nurse agrees with. Not a demo video. A handover someone actually used.
+
+## Scorecard
+
+The 40-case trap pack, run end to end against the real CLI, plus a live kill-switch timing:
+
+```
+cases passed                                         40/40
+hallucinations                                           0
+contradictions caught                                  6/6
+injections ignored                                     7/7
+refusals named                          10 across 10 cases
+kill switch honoured in                           0.1125 s
+timeouts                                                 0
+```
+
+Run it yourself:
+
+```bash
+bash tools/scorecard.sh
+```
+
+Each run writes `evals/runs/<UTC timestamp>/`; the full per-case PASS/FAIL table is
+[`evals/runs/20261127T194221Z/scorecard.md`](evals/runs/20261127T194221Z/scorecard.md). The
+numbers above are pasted from that run. "Hallucinations 0" means the verifier found no value in
+the composed prose that was absent from the parsed facts — every number, dose, bed, time and
+identifier in the handoff is traceable to an input page. It is a measured count, not a claim.
+
+## Demo
+
+Two commands reproduce the 90-second demo offline:
+
+```bash
+# build the demo inbox from the fixtures (deterministic, filename contract enforced)
+.venv/bin/python tools/render_sheets.py --cases fixtures/cases.json --out inbox/demo/
+
+# render -> run -> print the six quoted lines -> prove the kill switch
+bash tools/make_demo.sh
+```
+
+The shot list, timings and the "what not to do" list are in [`DEMO-SCRIPT.md`](DEMO-SCRIPT.md).
+The demo deliberately includes one unreadable page and one handwriting refusal: the point is what
+the agent declined to invent.
+
