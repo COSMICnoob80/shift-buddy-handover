@@ -6,7 +6,7 @@ list out, unattended, on one machine, with a kill switch.**
 Agentware 2026 · open track · solo. All product code in this repo was written inside the
 72-hour window (kickoff Fri 27 Nov 2026 23:00 PKT).
 
-**Demo video (2 minutes, real terminal run):** [VIDEO-URL]
+**Demo video (2 minutes, real terminal run):** [demo/shift-buddy-handover-demo.mp4](https://github.com/COSMICnoob80/shift-buddy-handover/blob/master/demo/shift-buddy-handover-demo.mp4)
 
 ---
 
