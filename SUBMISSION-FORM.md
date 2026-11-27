@@ -1,7 +1,38 @@
 # Agentware 2026 — submission form fields (paste-ready)
 
-Deadline: submissions due **Mon 30 Nov 2026, 18:00 UTC = 23:00 PKT**. Freeze Sun 29 Nov 21:00 PKT.
-Write it as if the form asks; each block below is one field.
+Deadline (authoritative, from agentwarehack.com/brief/): **Mon 30 Nov 2026, 18:00 UTC = 23:00 PKT**.
+Freeze Sun 29 Nov 21:00 PKT. Submit with a day of buffer — do not plan for 23:00.
+The submission form is sent by email and posted on the event Discord at kickoff; it is not a
+public URL. Everything below is written so it can be pasted field by field.
+
+---
+
+## Discord post (if the submission is a Discord message)
+
+```
+Shift Buddy Handover — Open track — solo
+
+Repo: https://github.com/COSMICnoob80/shift-buddy-handover  (MIT)
+Video (1:52, real terminal run): https://github.com/COSMICnoob80/shift-buddy-handover/blob/master/demo/shift-buddy-handover-demo.mp4
+Trace (one committed run): https://github.com/COSMICnoob80/shift-buddy-handover/tree/master/traces/2026-11-28-demo
+
+Photographs of a night-shift paper handoff land in a watched folder; with nobody at the
+keyboard the agent writes a structured SBAR handoff (every line ending in the page it came
+from), a gap list (unreadable pages named with the reason, contradictions quoted from both
+pages, missing mandatory fields listed), and a replayable audit trail. It refuses rather than
+guesses, never diagnoses, never prescribes, never sends, never touches the network.
+
+Numbers from `bash tools/scorecard.sh`, reproduced on a clean clone:
+40/40 trap-pack cases · 0 hallucinations · 6/6 contradictions · 7/7 injections ignored ·
+10 refusals named across 10 cases · kill switch honoured in 0.11 s · 0 timeouts ·
+50 guardrail tests green.
+
+Not fixed, and said in the README: v1 does not read handwriting — it refuses the page by name
+and lists it. The demo pages are rendered sheets plus one 0-byte unreadable page, not camera
+photos. The composer is a deterministic template, not an LLM, so a judge's run has no model to
+download and no variance to explain.
+```
+
 
 ---
 
@@ -63,7 +94,7 @@ Requirements: Python 3.10+, standard library only. No keys, no network, no GPU, 
 ## The kill switch paragraph
 
 ```
-The kill switch is a file, not a prompt. A cheap poll runs between pages and between stages, so whatever is in flight finishes atomically before the run unwinds. `touch STOP` (or `python3 -m src.cli kill`) stops the run, marks status.json with stopped_by: STOP and the honoured_in seconds it actually took, and leaves the audit trail intact — nothing partial is left unmarked. Measured on this machine at 0.09–0.12 s from the file appearing to the process exiting, and the demo video shows it firing mid-run on a 500-page inbox (a nine-page run finishes in 0.16 s, so there is nothing to interrupt).
+The kill switch is a file, not a prompt. A cheap poll runs between pages and between stages, so whatever is in flight finishes atomically before the run unwinds. `touch STOP` (or `python3 -m src.cli kill`) stops the run, marks status.json with stopped_by: STOP and the honoured_in seconds it actually took, and leaves the audit trail intact — nothing partial is left unmarked. Measured on this machine at 0.08–0.15 s from the file appearing to the process exiting, and the demo video shows it firing mid-run on a 500-page inbox (a nine-page run finishes in about 0.2 s, so there is nothing to interrupt).
 ```
 
 ## Safety, one line per bonus criterion

@@ -73,7 +73,7 @@ in the submitted tree — [`evals/runs/20261127T194221Z/scorecard.md`](evals/run
 is the per-case PASS/FAIL table, and
 [`evals/runs/final-check/scorecard.md`](evals/runs/final-check/scorecard.md) is the same pack
 re-run after the last three defect fixes. The kill-switch figure is wall-clock on this machine
-and moves between runs (0.08 s – 0.12 s); it is measured live by the script, not stored, so the
+and moves between runs (0.08 s – 0.15 s); it is measured live by the script, not stored, so the
 0.1113 s above is the figure from the run immediately before freeze, not a constant.
 
 The 40 cases in [`fixtures/cases.json`](fixtures/cases.json) are synthetic handoffs, twenty of
