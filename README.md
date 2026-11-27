@@ -8,6 +8,10 @@ Agentware 2026 · open track · solo. All product code in this repo was written 
 
 **Demo video (2 minutes, real terminal run):** [demo/shift-buddy-handover-demo.mp4](https://github.com/COSMICnoob80/shift-buddy-handover/blob/master/demo/shift-buddy-handover-demo.mp4)
 
+**One committed run, unedited (the trace):** [`traces/2026-11-28-demo/`](traces/2026-11-28-demo/) — 9 pages in,
+15 patients out, `audit.jsonl` with a sha256 per input page, `handoff.md`, `gaps.md`, `summary.json`.
+Read [`traces/README.md`](traces/README.md) first; reproduce it in three seconds with `bash tools/make_demo.sh`.
+
 ---
 
 ## What it does, in one paragraph

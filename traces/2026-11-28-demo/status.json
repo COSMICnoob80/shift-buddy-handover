@@ -1,0 +1,73 @@
+{
+  "run_id": "2026-11-28T01:22:06+05:00",
+  "shift": {
+    "date": "2026-11-28",
+    "ward": "RO",
+    "handover_to": "night"
+  },
+  "state": "completed",
+  "exit_reason": "completed",
+  "updated_at": "2026-11-28T01:22:07+05:00",
+  "started_at": "2026-11-28T01:22:06+05:00",
+  "out_dir": "out/demo/2026-11-28",
+  "model": "template",
+  "patients": 15,
+  "unreadable_pages": [
+    7
+  ],
+  "contradictions": 1,
+  "injections": 1,
+  "verify": {
+    "ok": true,
+    "violations": []
+  },
+  "stopped_by": null,
+  "honoured_in": null,
+  "inputs": [
+    {
+      "page": 1,
+      "sha256": "bc3a284d42624c96f799922a3a15934ce66395f698b573ccefee0724c480363a",
+      "readable": true
+    },
+    {
+      "page": 2,
+      "sha256": "6977f3aa9303ce4a7d4a01db729ce87c72d71624fe3783606683b9bf31da8cb8",
+      "readable": true
+    },
+    {
+      "page": 3,
+      "sha256": "87c6ef55e5da973f5dfbd6b9d0e8f42b598eddb80042f530ff08f0b6a05354be",
+      "readable": true
+    },
+    {
+      "page": 4,
+      "sha256": "63979428352f47a9f8b5fef8504dc19f51e062a43ef1e1b8d90f110f634794c2",
+      "readable": true
+    },
+    {
+      "page": 5,
+      "sha256": "6afa939dcd144936abb6bfbac980dc66cea764d9318206967fb4a5bbc65b23af",
+      "readable": true
+    },
+    {
+      "page": 6,
+      "sha256": "d3ad9306d31f9a505afc4b782ee242e2cd40d31b94af1bb8d87b81ae4622dded",
+      "readable": true
+    },
+    {
+      "page": 7,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readable": false
+    },
+    {
+      "page": 8,
+      "sha256": "adb3e7b99d3a4c9044f22daa66aecdaebbb3c4e79a44cb66380cec7f37d5bcd5",
+      "readable": true
+    },
+    {
+      "page": 9,
+      "sha256": "056bb0f9e6164c1a0292ccc6cf82e9fb02c4f8a17a66e707120472c9845104ac",
+      "readable": true
+    }
+  ]
+}
