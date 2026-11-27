@@ -49,7 +49,7 @@ hallucinations                                           0
 contradictions caught                                  6/6
 injections ignored                                     7/7
 refusals named                          10 across 10 cases
-kill switch honoured in                            0.1042 s
+kill switch honoured in                            0.1113 s
 timeouts                                                 0
 ```
 
