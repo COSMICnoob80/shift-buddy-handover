@@ -1,27 +1,12 @@
 """Deterministic rules: contradictions, gaps and missing mandatory fields.
 
 Nothing here guesses.  A contradiction is emitted only when two pages actually
-disagree about the same patient and the same field; a gap is a named absence,
-not something the page left unsaid silently.
+disagree about the same patient and the same field.  Missing mandatory fields
+are structural: a field is a gap when the patient carries no value for it, not
+only when the page happens to say so in prose.
 """
 
 from __future__ import annotations
-
-import re
-
-_ALLERGY_CUE = re.compile(
-    r"(?:no allergy(?: field)?[^.]{0,60}(?:recorded|written|documented)"
-    r"|allergy(?: status)?[^.]{0,40}(?:not|n't)\s+(?:recorded|written|documented))",
-    re.I,
-)
-_COVERING_CUE = re.compile(
-    r"(?:no covering(?: clinician)?[^.]{0,60}(?:named|recorded|documented)"
-    r"|covering(?: clinician)?[^.]{0,40}(?:not|n't)\s+(?:named|recorded|documented))",
-    re.I,
-)
-_MRN_CUE = re.compile(r"mrn[^.]{0,40}(?:not|n't)\s+(?:written|recorded|documented)", re.I)
-_NAME_CUE = re.compile(r"name[^.]{0,20}(?:illegible|not\s+readable)", re.I)
-_BED_CUE = re.compile(r"bed[^.]{0,30}(?:not|n't)\s+(?:written|recorded|documented)", re.I)
 
 
 def _unique(values):
@@ -174,19 +159,13 @@ def _bed_reuse_contradictions(patients: list) -> list:
     return results
 
 
-def _cue_text(patient: dict) -> str:
-    parts = []
-    for key in ("issues", "source_text", "notes"):
-        value = patient.get(key)
-        if isinstance(value, (list, tuple)):
-            parts.extend(str(item) for item in value)
-        elif value:
-            parts.append(str(value))
-    return " ".join(parts)
-
-
 def _missing_for(patient: dict) -> list:
-    text = _cue_text(patient)
+    """Mandatory fields are judged structurally: no value means a gap.
+
+    ``allergy`` and ``covering_clinician`` are flagged when the page carries no
+    allergy statement and no covering-clinician line respectively, regardless of
+    whether any prose cues acknowledge the absence.
+    """
     absent = []
     if patient.get("bed") in (None, ""):
         absent.append("bed")
@@ -194,23 +173,10 @@ def _missing_for(patient: dict) -> list:
         absent.append("mrn")
     if patient.get("name_as_written") in (None, ""):
         absent.append("name")
-
-    allergy_missing = patient.get("allergy") in (None, "")
-    covering_missing = patient.get("covering") in (None, "")
-
-    if allergy_missing and _ALLERGY_CUE.search(text):
+    if patient.get("allergy") in (None, ""):
         absent.append("allergy")
-    if covering_missing and _COVERING_CUE.search(text):
+    if patient.get("covering") in (None, ""):
         absent.append("covering_clinician")
-
-    # An explicit hard-field statement is also a gap even if another field is
-    # simply blank: blank is not the same as documented absence.
-    if "mrn" not in absent and _MRN_CUE.search(text):
-        absent.append("mrn")
-    if "name" not in absent and _NAME_CUE.search(text):
-        absent.append("name")
-    if "bed" not in absent and _BED_CUE.search(text):
-        absent.append("bed")
     return absent
 
 
