@@ -5,7 +5,7 @@ a runnable 90-second demo, and the 40-case scorecard. All run from the repo root
 all offline, none of them touch `src/`.
 
 ```
-.venv/bin/python tools/render_sheets.py --cases fixtures/cases.json --out inbox/demo/
+python3 tools/render_sheets.py --cases fixtures/cases.json --out inbox/demo/
 bash tools/make_demo.sh
 bash tools/scorecard.sh
 ```
@@ -18,7 +18,7 @@ Every output block below is pasted from a real run on **2026-11-27T19:42Z** (PKT
 ## 1. `render_sheets.py` — build the demo inbox, deterministically
 
 ```console
-$ .venv/bin/python tools/render_sheets.py --cases fixtures/cases.json --out inbox/demo/
+$ python3 tools/render_sheets.py --cases fixtures/cases.json --out inbox/demo/
 demo inbox: /home/cosmicnoob/shift-buddy-handover/inbox/demo
   handoff_2026-11-28_01.txt  <- C-003 source page 1, readable
   handoff_2026-11-28_02.txt  <- C-014 source page 1, readable
