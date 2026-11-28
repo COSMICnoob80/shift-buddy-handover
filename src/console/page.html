@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shift Buddy · live console</title>
+<link rel="stylesheet" href="/console.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to screen</a>
+
+<div class="app">
+  <aside class="rail" aria-label="Shift Buddy console">
+    <div class="rail__brand">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div>
+        <div class="wordmark"><b>Shift Buddy</b></div>
+        <div class="sub">live console · real pipeline</div>
+      </div>
+    </div>
+
+    <nav class="nav" role="tablist" aria-orientation="vertical" aria-label="Screens">
+      <button class="nav__item" role="tab" id="tab-1" aria-controls="s1" aria-selected="true" data-screen="1">
+        <span class="nav__n">01</span><span>Trigger</span><span class="nav__dot" aria-hidden="true"></span>
+      </button>
+      <button class="nav__item" role="tab" id="tab-2" aria-controls="s2" aria-selected="false" tabindex="-1" data-screen="2">
+        <span class="nav__n">02</span><span>Live run</span><span class="nav__dot" aria-hidden="true"></span>
+      </button>
+      <button class="nav__item" role="tab" id="tab-3" aria-controls="s3" aria-selected="false" tabindex="-1" data-screen="3">
+        <span class="nav__n">03</span><span>Handoff</span><span class="nav__dot" aria-hidden="true"></span>
+      </button>
+      <button class="nav__item" role="tab" id="tab-4" aria-controls="s4" aria-selected="false" tabindex="-1" data-screen="4">
+        <span class="nav__n">04</span><span>Assisted resolve</span><span class="nav__dot" aria-hidden="true"></span>
+      </button>
+      <button class="nav__item" role="tab" id="tab-5" aria-controls="s5" aria-selected="false" tabindex="-1" data-screen="5">
+        <span class="nav__n">05</span><span>Audit and kill</span><span class="nav__dot" aria-hidden="true"></span>
+      </button>
+    </nav>
+
+    <div class="rail__foot">
+      <div class="runstate" id="railState" data-state="idle"><span class="led" aria-hidden="true"></span><span id="railStateText">Idle</span></div>
+      <div class="rail__meta" id="railMeta">no run yet<br>counters read from audit.jsonl</div>
+      <button class="kill-rail" id="killRail" type="button" aria-keyshortcuts="Escape">
+        <span id="killRailLabel">Halt run</span><kbd>Esc</kbd>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <div class="topbar__left">Ward 4B &middot; real run &middot; audit on &middot; no network</div>
+      <div class="topbar__right">
+        <span class="tag">synthetic data &middot; real pipeline</span>
+        <span class="runchip" id="runChip" data-state="idle">idle</span>
+        <span class="clock" id="clock">--:--:--</span>
+      </div>
+    </header>
+
+    <!-- ============ 01 TRIGGER ============ -->
+    <section class="screen" id="s1" role="tabpanel" aria-labelledby="tab-1" tabindex="0">
+      <div class="screenhead">
+        <div>
+          <h1>Run the real handover agent</h1>
+          <p class="lede">Press start and the actual pipeline runs on this machine: it reads every page in a padded inbox, refuses what it cannot read, and composes one cited SBAR handoff. Nothing here is simulated &mdash; the next screens read back the run&rsquo;s own audit trail.</p>
+        </div>
+        <div class="headaction">
+          <span class="hint">engine: local template &middot; no cloud</span>
+        </div>
+      </div>
+
+      <div class="trigger">
+        <div class="pane">
+          <div class="pane__head">
+            <div class="pane__title"><h2>Inbox</h2><span class="hint" id="inboxHint">padded for a watchable live run</span></div>
+          </div>
+          <div class="path"><span aria-hidden="true">&#9656;</span><b id="inboxPath">out/console/&hellip;/_inbox</b><span class="caret" aria-hidden="true"></span></div>
+          <div id="inboxFull">
+            <div class="filehead" aria-hidden="true"><span>file</span><span>kind</span><span>state</span></div>
+            <div class="files" id="fileList"></div>
+            <div class="filefoot"><span id="fileFoot">&mdash;</span><span style="display:flex;align-items:center;gap:6px;color:var(--ok)"><span class="watch"><span class="led"></span>ready</span></span></div>
+          </div>
+        </div>
+
+        <div class="pane">
+          <div class="pane__head"><div class="pane__title"><h2>What happens on run</h2></div></div>
+          <ol class="plan">
+            <li><span class="k">01</span><div><h3>Read locally</h3><p>Every page is hashed and read on this machine. No page, crop, or text leaves it.</p></div></li>
+            <li><span class="k">02</span><div><h3>Group into patients</h3><p>Pages are matched to a patient by MRN and bed. A page that matches nothing is held, not assigned.</p></div></li>
+            <li><span class="k">03</span><div><h3>Refuse instead of guess</h3><p>An unreadable page is refused and named in the gap list. Every figure in the handoff carries its source page.</p></div></li>
+            <li><span class="k">04</span><div><h3>Stay interruptible</h3><p>The kill switch writes a real STOP file the run polls between pages and stages. No partial handoff is written.</p></div></li>
+          </ol>
+
+          <div class="runbox">
+            <button class="btn btn--primary" id="startRun" type="button" aria-describedby="runHint">
+              <span id="startRunLabel">Start run</span>
+              <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h10M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></svg>
+            </button>
+            <div class="sub">
+              <span class="hint" id="runHint">real pipeline &middot; kill switch armed &middot; audit on</span>
+            </div>
+            <div class="lastrun" id="lastRunNote" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">
+              No run yet. Every counter on the next screen is read from <b>audit.jsonl</b>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screenfoot">
+        <span class="hint">Synthetic patients, beds and MRNs. Padding pages are real pages, read for real; they carry no patient identity so the patient count stays honest.</span>
+        <button class="nextbtn" type="button" data-goto="2">Run it <b>Live run &rarr;</b></button>
+      </div>
+    </section>
+
+    <!-- ============ 02 LIVE ============ -->
+    <section class="screen" id="s2" role="tabpanel" aria-labelledby="tab-2" tabindex="0" hidden>
+      <div class="screenhead">
+        <div>
+          <h1>Live run</h1>
+          <p class="lede">Every read, stage and refusal appears here the moment the pipeline appends it to the audit. The counters are computed from those records, not estimated.</p>
+        </div>
+        <div class="headaction">
+          <button class="btn btn--ghost" id="restartRun" type="button">Start a fresh run</button>
+          <button class="btn btn--primary" id="openHandoff" type="button" disabled>Open handoff</button>
+        </div>
+      </div>
+
+      <div class="readout" aria-label="Run counters" aria-live="polite">
+        <div class="ro"><span class="ro__l">pages read</span><span class="ro__v" id="cPages" data-n="0">0<small>/ ?</small></span></div>
+        <div class="ro"><span class="ro__l">patients found</span><span class="ro__v" id="cPatients" data-n="0">0<small>found</small></span></div>
+        <div class="ro ro--flag"><span class="ro__l">flagged</span><span class="ro__v" id="cFlagged" data-n="0">0</span></div>
+        <div class="ro ro--refused"><span class="ro__l">refused pages</span><span class="ro__v" id="cRefused" data-n="0">0</span></div>
+        <div class="ro"><span class="ro__l">facts cited</span><span class="ro__v" id="cFacts" data-n="0">0<small>in handoff</small></span></div>
+        <div class="ro ro--zero"><span class="ro__l">invented facts</span><span class="ro__v" id="cInvented">0</span></div>
+        <i class="runprog" id="runProg" aria-hidden="true"></i>
+      </div>
+
+      <div class="haltbanner" id="haltBanner" role="alert">
+        <div class="hb">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2 15 14H1L8 2Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6.2v3.4M8 11.8v.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
+          <div>
+            <h2 id="haltTitle">Run halted by operator</h2>
+            <p id="haltBody">The STOP file was honoured. No handoff was written. The audit keeps every entry up to the stop.</p>
+          </div>
+        </div>
+        <div class="hbact">
+          <button class="btn btn--sm" type="button" data-goto="5">Open audit</button>
+          <button class="btn btn--sm btn--primary" id="haltRestart" type="button">Start a fresh run</button>
+        </div>
+      </div>
+
+      <div class="live">
+        <div class="col">
+          <div class="col__head"><h2>Pages</h2><span class="count" id="pageCount">0 of ?</span></div>
+          <div class="pagelist" id="pageList"></div>
+        </div>
+        <div class="col">
+          <div class="col__head"><h2>Trace</h2><span class="hint">run <span id="runIdLabel">&mdash;</span> &middot; audit.jsonl</span></div>
+          <pre class="trace" id="trace" aria-live="polite" aria-label="Run trace"></pre>
+        </div>
+      </div>
+
+      <div class="screenfoot">
+        <span class="hint" id="liveFootHint">Nothing is sent anywhere during a run. The assisted lane stays off. Every line above is a record from the run&rsquo;s audit.jsonl.</span>
+        <button class="nextbtn" type="button" data-goto="3">Composed document <b>Handoff &rarr;</b></button>
+      </div>
+    </section>
+
+    <!-- ============ 03 HANDOFF ============ -->
+    <section class="screen" id="s3" role="tabpanel" aria-labelledby="tab-3" tabindex="0" hidden>
+      <div class="screenhead">
+        <div>
+          <h1>Handoff document</h1>
+          <p class="lede">Rendered from the run&rsquo;s real <span class="mono">handoff.md</span>. Two display modes, one set of facts: the same citations, re-laid out, nothing added.</p>
+        </div>
+        <div class="headaction">
+          <div class="seg" role="group" aria-label="Display mode" id="modeSeg">
+            <button type="button" data-mode="sbar" aria-pressed="true">SBAR</button>
+            <button type="button" data-mode="ward" aria-pressed="false">Ward format</button>
+          </div>
+          <span class="hint" id="docStamp">&mdash;</span>
+        </div>
+      </div>
+
+      <div class="ribbon" id="verifyRibbon">
+        <div class="ribbon__l">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.2 12 13 4.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square"/></svg>
+          <span class="num"><span id="factOk">0</span> page citations</span> traced to a source page
+          <span style="color:var(--tx-3);font-weight:400">&middot;</span>
+          <span style="font-weight:500;color:var(--ok)" id="inventedLine">0 invented</span>
+        </div>
+        <div class="ribbon__r">
+          <span id="ribbonPatients">&mdash; patients</span><span id="ribbonPages">&mdash; pages</span><span id="ribbonGaps">&mdash;</span><span id="ribbonRecs">&mdash;</span>
+        </div>
+      </div>
+
+      <div class="handoff">
+        <div class="pindex" role="group" aria-label="Patients in this handoff" id="patientIndex"></div>
+        <div id="docHost"><div class="doc" style="padding:24px;color:var(--paper-ink)">No handoff yet. Run the agent, or open a completed run.</div></div>
+        <div class="gaps">
+          <div class="gaps__head">
+            <h2>Gaps in this handoff</h2>
+            <p>From the run&rsquo;s real gaps.md. Nothing was guessed to fill them.</p>
+          </div>
+          <div id="gapList"></div>
+          <div class="gaps__foot" id="gapFoot">&mdash;</div>
+        </div>
+      </div>
+
+      <div class="screenfoot">
+        <span class="hint">Citation key: each <span class="mono">[p. N]</span> resolves to a page in the audit. Ward format re-orders the same facts; it cannot add or drop one.</span>
+        <button class="nextbtn" type="button" data-goto="5">Check the record <b>Audit and kill &rarr;</b></button>
+      </div>
+    </section>
+
+    <!-- ============ 04 ASSISTED ============ -->
+    <section class="screen" id="s4" role="tabpanel" aria-labelledby="tab-4" tabindex="0" hidden>
+      <div class="screenhead">
+        <div>
+          <h1>Assisted resolve</h1>
+          <p class="lede">A design for a human-in-the-loop opt-in lane. It is <b>not wired in v1</b>: there is no cloud reader in this build, so this screen never sends anything.</p>
+        </div>
+        <div class="headaction">
+          <span class="chip chip--assist">assisted lane &middot; not wired in v1</span>
+        </div>
+      </div>
+
+      <div class="assistgrid">
+        <div>
+          <div class="frame">
+            <div class="frame__chrome">
+              <span class="mono">design preview &middot; no page leaves this machine</span>
+              <span class="chip" data-s="REFUSED">illustrative</span>
+            </div>
+            <div class="frame__body">
+              <div class="sheet" role="img" aria-label="Illustrative photographed medication table, shown for design only">
+                <div class="sheet__hosp"><span>ST. AUGUSTINE &middot; WARD 4B</span><span>FILE 02</span></div>
+                <div class="sheet__id"><span>R. COSTA &middot; MRN &bull;&bull;&bull;2038</span><span>BED 07</span></div>
+                <div class="sheet__pt">Regular medications</div>
+                <div class="sheet__rows"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="glare"></div>
+              </div>
+            </div>
+            <div class="framemeta">
+              <span>lane <b>off</b></span>
+              <span>cloud reader <b>not present</b></span>
+              <span>data sent <b style="color:var(--ok)">none</b></span>
+            </div>
+          </div>
+
+          <div class="act" style="margin-top:16px">
+            <div class="act__sec">
+              <h2>Why this screen cannot act</h2>
+              <ul class="why">
+                <li><span class="k">status</span><span class="v">The assisted lane is specified but <b>not wired into v1</b>. No cloud call exists in the code path.</span></li>
+                <li><span class="k">safety</span><span class="v">Refused pages stay refused and are named in the gap list. Nothing is inferred to fill them.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="act">
+          <div class="act__sec">
+            <h2>What would leave this machine</h2>
+            <p>Nothing, in this build. The lane is shown so the design is inspectable; the buttons are disabled to keep that honest.</p>
+            <div class="warningline">
+              <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2 15 14H1L8 2Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6.2v3.4M8 11.8v.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
+              <span>Assisted resolve is <b>not wired in v1</b>. This mirrors the honesty of the GGUF lane in <span class="mono">.env.example</span>.</span>
+            </div>
+            <div class="actrow">
+              <button class="btn btn--primary" type="button" disabled>Resolve with one cloud read</button>
+              <button class="btn" type="button" disabled>Leave as a gap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screenfoot">
+        <span class="hint">The assisted lane cannot start a run, cannot widen a crop, and is not reachable from this console because no cloud reader is configured.</span>
+        <button class="nextbtn" type="button" data-goto="5">Check the record <b>Audit and kill &rarr;</b></button>
+      </div>
+    </section>
+
+    <!-- ============ 05 AUDIT ============ -->
+    <section class="screen" id="s5" role="tabpanel" aria-labelledby="tab-5" tabindex="0" hidden>
+      <div class="screenhead">
+        <div>
+          <h1>Audit and kill</h1>
+          <p class="lede">The run&rsquo;s real <span class="mono">audit.jsonl</span>, appended in order. It is sequential and not hash-chained, and this screen says so rather than pretending otherwise.</p>
+        </div>
+        <div class="headaction">
+          <span class="hint">audit.jsonl &middot; append only</span>
+          <button class="btn btn--ghost" id="exportAudit" type="button">Export .jsonl</button>
+        </div>
+      </div>
+
+      <div class="auditgrid">
+        <div class="audit">
+          <div class="audit__bar">
+            <div class="audit__stats">
+              <span id="auditCount">0 entries</span>
+              <span class="chain" id="chainState">
+                <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.2 12 13 4.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square"/></svg>
+                sequential &middot; not hashed
+              </span>
+              <span id="auditRunLabel">no run</span>
+            </div>
+            <div class="audit__tools">
+              <div class="seg" role="group" aria-label="Filter audit entries">
+                <button type="button" data-filter="all" aria-pressed="true">all</button>
+                <button type="button" data-filter="page" aria-pressed="false">pages</button>
+                <button type="button" data-filter="patient" aria-pressed="false">patients</button>
+                <button type="button" data-filter="stage" aria-pressed="false">stages</button>
+              </div>
+            </div>
+          </div>
+          <div class="audit__list" id="auditList" aria-live="polite" aria-label="Audit log"></div>
+        </div>
+
+        <div class="audit__side">
+          <div class="killpanel">
+            <div class="killpanel__h"><h2>Kill switch</h2><span class="hint" id="killStateHint">armed</span></div>
+            <div class="killpanel__body">
+              <p>Writes a real STOP file. The run polls it between pages and stages, finishes the page in flight, then records the stop. Nothing partial is written.</p>
+              <button class="killbig" id="killBig" type="button">
+                <span class="killbig__in">
+                  <span>
+                    <span class="killbig__l" id="killBigLabel">Halt run</span>
+                    <span class="killbig__s" id="killBigSub">writes the real STOP file</span>
+                  </span>
+                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h8v8H8z" fill="currentColor"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
+                </span>
+              </button>
+              <ul class="killlist">
+                <li><span class="k">01</span><span>Stops the reader and clears the queue. Nothing new starts.</span></li>
+                <li><span class="k">02</span><span>Leaves the audit intact and appends the stop with actor and time.</span></li>
+                <li><span class="k">03</span><span>Writes no partial handoff. The document stays at the last accepted run.</span></li>
+              </ul>
+              <div class="killmeta">
+                <span>run <b id="killRun">none</b></span>
+                <span>pages read at stop <b id="killAt">n/a</b></span>
+                <span>honoured in <b id="killHonour">n/a</b></span>
+                <span>last halt <b id="killLast">none this session</b></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="killpanel" style="margin-top:16px">
+            <div class="killpanel__h"><h2>40-case scorecard</h2><span class="hint">real harness</span></div>
+            <div class="killpanel__body">
+              <p>Runs the real trap pack (<span class="mono">evals.run</span>) over the fixtures and reports what it measured.</p>
+              <button class="btn btn--primary" id="runScorecard" type="button" style="width:100%">Run scorecard</button>
+              <pre class="mono" id="scorecardOut" style="margin-top:12px;font-size:11px;line-height:1.6;color:var(--tx-2);white-space:pre-wrap">not run yet</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screenfoot">
+        <span class="hint">This audit is sequential: each line is appended and fsynced, but records carry no hash of the previous line. The console shows &ldquo;sequential &middot; not hashed&rdquo; rather than faking a chain.</span>
+        <button class="nextbtn" type="button" data-goto="1">Back to the start <b>Trigger &rarr;</b></button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+  const S = {
+    run: null, meta: null, offset: 0, records: [], phase: "idle",
+    stats: {}, handoff: null, gaps: null, parsed: null, status: null,
+    mode: "sbar", filter: "all", activeIdx: 0, poll: null, finalized: false,
+    inputsByPage: {}, patientByPage: {}, startedAt: 0, scorecard: null
+  };
+
+  /* ---------------- clock ---------------- */
+  function tickClock(){
+    const d = new Date();
+    $("clock").textContent = [d.getHours(),d.getMinutes(),d.getSeconds()]
+      .map(v=>String(v).padStart(2,"0")).join(":");
+  }
+  setInterval(tickClock, 1000); tickClock();
+
+  function fmtTs(ts){
+    if(!ts) return "--:--:--";
+    const m = String(ts).match(/T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,3}))?/);
+    if(!m) return String(ts).slice(11,19);
+    return m[1]+":"+m[2]+":"+m[3]+"."+((m[4]||"0").padEnd(3,"0").slice(0,3));
+  }
+
+  async function api(path, opts){
+    const r = await fetch(path, opts || {});
+    return r.json();
+  }
+  function POST(path, body){
+    return api(path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body||{})});
+  }
+
+  /* ---------------- screens ---------------- */
+  const tabs = Array.from(document.querySelectorAll(".nav__item"));
+  const screens = [null,$("s1"),$("s2"),$("s3"),$("s4"),$("s5")];
+  function setScreen(n){
+    tabs.forEach(t=>{
+      const on = String(n) === t.dataset.screen;
+      t.setAttribute("aria-selected", on?"true":"false");
+      t.tabIndex = on?0:-1;
+    });
+    screens.forEach((s,i)=>{ if(s) s.hidden = (i!==n); });
+    if(n===3) renderHandoff();
+    if(n===5) renderAudit();
+    window.scrollTo(0,0);
+  }
+  tabs.forEach(t=>t.addEventListener("click",()=>setScreen(Number(t.dataset.screen))));
+  document.querySelectorAll("[data-goto]").forEach(b=>{
+    b.addEventListener("click",()=>setScreen(Number(b.dataset.goto)));
+  });
+
+  /* ---------------- phase ---------------- */
+  function setPhase(ph){
+    S.phase = ph;
+    const label = {idle:"idle",starting:"starting",running:"running",halted:"halted",done:"complete",error:"error"}[ph]||ph;
+    const rail = $("railState"); rail.dataset.state = (ph==="starting"?"running":ph);
+    $("railStateText").textContent =
+      ph==="running" ? "Running · " + (S.stats.pages_read||0) + " read"
+      : ph==="done" ? "Complete" : ph==="halted" ? "Halted" : ph==="error" ? "Error" : "Idle";
+    const chip = $("runChip"); chip.dataset.state = (ph==="starting"?"running":ph);
+    chip.textContent = ph==="running" ? "running" : label;
+    const halted = ph==="halted";
+    $("killRail").dataset.state = halted?"halted":"armed";
+    $("killRailLabel").textContent = halted?"Halted":"Halt run";
+    $("killBig").dataset.state = halted?"halted":"armed";
+    $("killBigLabel").textContent = halted?"Run halted":"Halt run";
+    $("killBigSub").textContent = halted?"start a fresh run":"writes the real STOP file";
+    $("killStateHint").textContent = halted?"pressed":"armed";
+    $("killRun").textContent = S.run || "none";
+  }
+
+  /* ---------------- counters ---------------- */
+  function renderCounters(){
+    const st = S.stats || {};
+    const total = st.pages_total || 0;
+    $("cPages").innerHTML = (st.pages_read||0) + '<small>/ ' + (total || "?") + '</small>';
+    $("cPages").dataset.n = st.pages_read||0;
+    $("cPatients").innerHTML = (st.patients||0) + '<small>found</small>';
+    $("cPatients").dataset.n = st.patients||0;
+    $("cFlagged").textContent = st.flagged||0; $("cFlagged").dataset.n = st.flagged||0;
+    $("cRefused").textContent = st.refused||0; $("cRefused").dataset.n = st.refused||0;
+    $("cFacts").innerHTML = (st.facts||0) + '<small>in handoff</small>';
+    $("cFacts").dataset.n = st.facts||0;
+    $("cInvented").textContent = st.invented||0;
+    $("cInvented").dataset.n = st.invented||0;
+    $("runProg").style.width = total ? Math.min(100,(st.pages_read||0)/total*100)+"%" : "0%";
+    $("pageCount").textContent = (st.pages_read||0) + " of " + (total || "?");
+    $("railMeta").innerHTML = S.phase==="idle"
+      ? "no run yet<br>counters read from audit.jsonl"
+      : (st.pages_read||0) + " of " + (total||"?") + " read<br>" + (st.flagged||0) + " flagged · " + (st.refused||0) + " refused";
+    $("factOk").textContent = st.facts||0;
+    $("inventedLine").textContent = (st.invented||0) + " invented";
+    $("ribbonPatients").textContent = (st.patients||0) + " patients";
+    $("ribbonPages").textContent = (st.pages_read||0) + " pages";
+    $("ribbonRecs").textContent = (st.records||0) + " audit records";
+  }
+
+  /* ---------------- trace ---------------- */
+  function traceFor(r){
+    switch(r.kind){
+      case "run_begin": return ["see","RUN", "run begun · "+(r.model||"")+" · inbox "+(r.inbox||"")];
+      case "run_start": return ["decide","START", (r.page_count||0)+" pages · "+(r.model||"")+
+        (r.shift? " · "+(r.shift.ward||"")+"→"+(r.shift.handover_to||"") : "")];
+      case "page":
+        if(r.decision==="read")
+          return ["decide","READ","p"+r.page+" "+(r.page_kind||"")+" · "+(r.text_len||0)+" chars · sha "+(r.sha256||"").slice(0,8)];
+        return ["stop","REFUSE","p"+r.page+" · "+(r.refusal_reason||"unreadable")];
+      case "stage":
+        return [r.event==="stage.end"?"ok":"see", (r.stage||"").toUpperCase(),
+          (r.event||"").replace("stage.","") + (r.detail? " · "+r.detail : "")];
+      case "patient": {
+        const c = r.confidence && r.confidence.overall != null ? r.confidence.overall : "—";
+        return ["ok","PATIENT","bed "+r.bed+" · "+(r.name_as_written||"name not read")+" · conf "+c+
+          ((r.refusals&&r.refusals.length)? " · "+r.refusals.length+" refusal(s)":"")];
+      }
+      case "run_end": {
+        const stopped = r.exit_reason==="stopped";
+        let x = (r.exit_reason||"end") + " · " + (r.duration_s!=null? r.duration_s+"s" : "");
+        if(r.stopped_by) x += " · stopped_by " + r.stopped_by + " · honoured " + r.honoured_in + "s";
+        if(r.verify_ok!=null) x += " · verify " + (r.verify_ok?"ok":"FAIL");
+        x += " · " + (r.patients||0) + " patients · " + ((r.violations||[]).length) + " invented";
+        return [stopped?"halt":"done", stopped?"HALT":"DONE", x];
+      }
+      default: return ["see", (r.kind||"?").toUpperCase(), JSON.stringify(r).slice(0,140)];
+    }
+  }
+
+  const MAX_TRACE = 700;
+  function appendTrace(recs){
+    const host = $("trace");
+    const frag = document.createDocumentFragment();
+    for(const r of recs){
+      const [k,v,x] = traceFor(r);
+      const line = document.createElement("div");
+      line.className = "tl"; line.dataset.k = k;
+      line.innerHTML = '<span class="tl__t">'+esc(fmtTs(r.ts))+'</span>' +
+        '<span class="tl__v">'+esc(v)+'</span>' +
+        '<span class="tl__x">'+esc(x)+'</span>';
+      frag.appendChild(line);
+    }
+    host.appendChild(frag);
+    while(host.children.length > MAX_TRACE) host.removeChild(host.firstChild);
+    host.scrollTop = host.scrollHeight;
+  }
+
+  /* ---------------- page cards ---------------- */
+  const MAX_CARDS = 80;
+  function renderPageCards(){
+    const pages = S.records.filter(r=>r.kind==="page");
+    const recent = pages.slice(-MAX_CARDS);
+    const host = $("pageList");
+    host.innerHTML = recent.map(r=>{
+      const input = S.inputsByPage[r.page] || {};
+      const name = input.path ? String(input.path).split("/").pop() : ("page "+r.page);
+      const pat = S.patientByPage[r.page];
+      let right;
+      if(r.decision==="refuse"){
+        right = '<span class="pg__pt" style="color:var(--stop-text)">refused</span>';
+      } else if(typeof r.ocr_confidence === "number"){
+        right = '<span class="pg__conf"><i class="cbar"><i style="width:'+Math.round(r.ocr_confidence*100)+'%"></i></i><b>'+r.ocr_confidence.toFixed(2)+'</b></span>';
+      } else if(pat && pat.confidence!=null){
+        right = '<span class="pg__conf"><i class="cbar"><i style="width:'+Math.round(pat.confidence*100)+'%"></i></i><b>'+pat.confidence.toFixed(2)+'</b></span>';
+      } else {
+        right = '<span class="pg__pt">text lane</span>';
+      }
+      const state = r.decision==="refuse" ? "REFUSED" : "PROCEED";
+      return '<div class="pg" data-s="'+state+'">'+
+        '<span class="pg__rail"></span><span class="pg__thumb" aria-hidden="true"></span>'+
+        '<span class="pg__b"><span class="pg__top"><span class="pg__f">'+esc(name)+'</span>'+
+        '<span class="chip" data-s="'+state+'">'+state.toLowerCase()+'</span></span>'+
+        '<span class="pg__bot"><span class="pg__pt">p'+r.page+' · '+(r.page_kind||"")+' · '+(r.text_len||0)+' chars</span>'+right+'</span></span></div>';
+    }).join("");
+    host.scrollTop = host.scrollHeight;
+  }
+
+  /* ---------------- polling ---------------- */
+  function startPolling(){
+    if(S.poll) clearInterval(S.poll);
+    S.poll = setInterval(poll, 250);
+    poll();
+  }
+  async function poll(){
+    if(!S.run) return;
+    let data;
+    try { data = await api("/api/audit?run="+encodeURIComponent(S.run)+"&offset="+S.offset); }
+    catch(e){ return; }
+    const fresh = data.records || [];
+    if(fresh.length){
+      S.records = S.records.concat(fresh);
+      for(const r of fresh) indexRecord(r);
+      appendTrace(fresh);
+      renderPageCards();
+    }
+    S.offset = data.offset || S.offset;
+    S.stats = data.stats || S.stats;
+    renderCounters();
+    if(!S.finalized){
+      const end = [...S.records].reverse().find(r=>r.kind==="run_end");
+      if(end) onRunEnd(end);
+    }
+  }
+
+  function indexRecord(r){
+    if(r.kind==="run_start" && Array.isArray(r.inputs)){
+      r.inputs.forEach(inp=>{ if(inp && inp.page!=null) S.inputsByPage[inp.page]=inp; });
+    }
+    if(r.kind==="patient"){
+      (r.pages||[]).forEach(p=>{
+        S.patientByPage[p] = {confidence: (r.confidence&&r.confidence.overall!=null)? r.confidence.overall : null};
+      });
+    }
+  }
+
+  async function onRunEnd(end){
+    S.finalized = true;
+    if(S.poll){ clearInterval(S.poll); S.poll = null; }
+    try { S.status = await api("/api/status?run="+encodeURIComponent(S.run)); } catch(e){}
+    if(end.exit_reason === "stopped"){
+      setPhase("halted");
+      $("haltBanner").dataset.on = "1";
+      const h = (end.honoured_in!=null) ? end.honoured_in : "?";
+      $("haltTitle").textContent = "Run halted by the real STOP file";
+      $("haltBody").textContent = "STOP honoured " + h + " s after arming, after " +
+        (S.stats.pages_read||0) + " pages were read. No handoff was written; the audit keeps every entry up to the stop.";
+      $("killAt").textContent = (S.stats.pages_read||0);
+      $("killHonour").textContent = h + " s";
+      $("killLast").textContent = fmtTs(end.ts) + " · " + (end.stopped_by||"STOP");
+      $("openHandoff").disabled = true;
+    } else if(end.exit_reason === "completed"){
+      setPhase("done");
+      $("haltBanner").dataset.on = "0";
+      $("openHandoff").disabled = false;
+      $("docStamp").textContent = "run " + S.run + " · " + fmtTs(end.ts);
+      await loadHandoff();
+      $("lastRunNote").innerHTML = "last run <b>"+esc(S.run)+"</b> · "+(end.duration_s)+"s · "+
+        (S.stats.pages_read||0)+" pages · "+(S.stats.patients||0)+" patients · "+(S.stats.refused||0)+" refused";
+    } else {
+      setPhase("error");
+      $("haltTitle").textContent = "Run ended: " + (end.exit_reason||"error");
+      $("haltBody").textContent = "The run ended without a handoff. Exit reason: " + (end.exit_reason||"unknown") +
+        (end.violations && end.violations.length ? " · " + end.violations.length + " violation(s)" : "");
+      $("haltBanner").dataset.on = "1";
+    }
+    renderCounters();
+    renderAudit();
+  }
+
+  /* ---------------- run control ---------------- */
+  function resetLive(){
+    S.offset=0; S.records=[]; S.stats={}; S.handoff=null; S.parsed=null;
+    S.finalized=false; S.inputsByPage={}; S.patientByPage={}; S.activeIdx=0;
+    if(S.poll){ clearInterval(S.poll); S.poll=null; }
+    $("trace").innerHTML=""; $("pageList").innerHTML="";
+    $("haltBanner").dataset.on="0";
+    $("openHandoff").disabled=true;
+    $("killAt").textContent="n/a"; $("killHonour").textContent="n/a"; $("killLast").textContent="none this session";
+    renderCounters();
+  }
+
+  async function startRun(){
+    if(S.phase==="running" || S.phase==="starting") return;
+    resetLive();
+    setPhase("starting");
+    setScreen(2);
+    let meta;
+    try { meta = await POST("/api/start", {}); }
+    catch(e){ setPhase("error"); $("haltBanner").dataset.on="1"; $("haltBody").textContent="Could not start the pipeline."; return; }
+    S.run = meta.run; S.meta = meta; S.startedAt = Date.now();
+    S.offset = 0;
+    $("runIdLabel").textContent = (meta.run||"").slice(-10);
+    $("inboxPath").textContent = meta.inbox || "";
+    $("inboxHint").textContent = (meta.pad||0) + " pages · padded for a watchable run";
+    $("fileFoot").textContent = (meta.pad||0) + " pages · read locally";
+    renderCounters();
+    setPhase("running");
+    startPolling();
+  }
+
+  async function killRun(){
+    if(!S.run || S.phase!=="running") return;
+    $("killRailLabel").textContent = "Stopping…";
+    try { await POST("/api/kill?run="+encodeURIComponent(S.run), {}); } catch(e){}
+    const line = document.createElement("div");
+    line.className="tl"; line.dataset.k="halt";
+    line.innerHTML = '<span class="tl__t">'+fmtTs(new Date().toISOString())+'</span>'+
+      '<span class="tl__v">KILL</span><span class="tl__x">operator wrote the STOP file · waiting for the run to latch it</span>';
+    $("trace").appendChild(line); $("trace").scrollTop = $("trace").scrollHeight;
+  }
+
+  $("startRun").addEventListener("click", startRun);
+  $("restartRun").addEventListener("click", startRun);
+  $("haltRestart").addEventListener("click", startRun);
+  $("killRail").addEventListener("click", killRun);
+  $("killBig").addEventListener("click", ()=>{ if(S.phase!=="halted") killRun(); });
+  $("openHandoff").addEventListener("click", ()=>setScreen(3));
+  document.addEventListener("keydown", (ev)=>{
+    if(ev.key==="Escape" && S.phase==="running"){ ev.preventDefault(); killRun(); }
+  });
+
+  /* ---------------- handoff parse + render ---------------- */
+  function parseHandoff(text){
+    const lines = text.split("\n");
+    let title = lines[0] || "";
+    const patients = []; const actions = [];
+    let cur = null, inActions = false;
+    for(const line of lines){
+      if(line.startsWith("# ")){ title = line.slice(2); continue; }
+      if(line.startsWith("## ")){
+        const h = line.slice(3);
+        if(/^Actions this shift/i.test(h)){ inActions = true; cur = null; continue; }
+        inActions = false;
+        const m = h.match(/^Bed\s+(.+?)\s+—\s+(.+?)\s+\[p\.\s*([0-9,\s]+)\]\s*$/);
+        cur = {
+          bed: m ? m[1].trim() : h,
+          name: m ? m[2].trim() : "",
+          page: m ? m[3].replace(/\s/g,"") : "",
+          s:"", issues:"", medNote:"", meds:[], a:"", plan:[], cites:new Set()
+        };
+        patients.push(cur); continue;
+      }
+      if(!cur){ if(inActions && line.startsWith("- ")) actions.push(line.slice(2)); continue; }
+      if(inActions){ if(line.startsWith("- ")) actions.push(line.slice(2)); continue; }
+      for(const mm of line.matchAll(/\[p\.\s*([0-9,\s]+)\]/g)){
+        mm[1].split(",").forEach(p=>{ const t=p.trim(); if(t) cur.cites.add(t); });
+      }
+      if(line.startsWith("S: ")) cur.s = line.slice(3);
+      else if(line.startsWith("B: Issues: ")) cur.issues = line.slice(11);
+      else if(line.startsWith("B: Meds: ")) cur.medNote = line.slice(9);
+      else if(line.startsWith("B: Med: ")) cur.meds.push(line.slice(7));
+      else if(line.startsWith("A: ")) cur.a = line.slice(3);
+      else if(line.startsWith("R: ")) cur.plan.push(line.slice(3));
+    }
+    return {title, patients, actions};
+  }
+
+  function cite(s){
+    return esc(s).replace(/\[p\.\s*[\d,\s]+\]/g, (m)=>'<span class="fact">'+m+'</span>');
+  }
+  function medsBlock(p){
+    if(p.meds.length){
+      return '<ul class="medlist">'+p.meds.map(m=>'<li><span>'+cite(m)+'</span></li>').join("")+'</ul>';
+    }
+    return '<p>'+cite(p.medNote || "Meds: none documented")+'</p>';
+  }
+  function planBlock(p){
+    if(p.plan.length){
+      return '<ul class="medlist">'+p.plan.map(x=>'<li><span>'+cite(x)+'</span></li>').join("")+'</ul>';
+    }
+    return '<p>No outstanding actions documented.</p>';
+  }
+  function overBlock(p){
+    const mine = (S.parsed ? S.parsed.actions : []).filter(a=>{
+      const needle = "Bed " + p.bed + " ";
+      return a.indexOf(needle) === 0 || a.indexOf("Bed " + p.bed) === 0;
+    });
+    if(mine.length){
+      return '<ul class="medlist">'+mine.map(a=>'<li><span>'+cite(a)+'</span></li>').join("")+'</ul>';
+    }
+    return '<p>No overnight action documented for this bed.</p>';
+  }
+
+  function renderPatientDoc(p, mode){
+    const head = '<header class="doc__head"><div>' +
+      '<h2 class="doc__name">'+(mode==="ward" ? "Bed "+esc(p.bed) : esc(p.name||"Name not read"))+'</h2>'+
+      '<div class="doc__meta"><span>'+(mode==="ward" ? esc(p.name||"name not read") : "Bed "+esc(p.bed))+'</span>'+
+      '<span>'+(p.page?("p. "+esc(p.page)):"")+'</span></div></div>'+
+      '<div class="doc__stamp"><span class="stamp">'+(mode==="ward"?"WARD":"SBAR")+'</span>'+
+      '<div class="doc__gen">'+(mode==="ward"?"over to on-call":"as written")+'</div></div></header>';
+    if(mode==="ward"){
+      return '<article class="doc"><!--ward-->'+head+
+        '<div class="block"><div class="block__k">F</div><div class="block__b"><h3>Findings</h3><p>'+cite(p.issues)+'</p><p>'+cite(p.a)+'</p></div></div>'+
+        '<div class="block"><div class="block__k">M</div><div class="block__b"><h3>Medications</h3>'+medsBlock(p)+'</div></div>'+
+        '<div class="block"><div class="block__k">P</div><div class="block__b"><h3>Plan</h3>'+planBlock(p)+'</div></div>'+
+        '<div class="block"><div class="block__k">O</div><div class="block__b"><h3>Over to on-call</h3>'+overBlock(p)+'</div></div>'+
+        '<div class="doc__foot"><span>same facts &middot; '+p.cites.size+' page refs</span><span>citations unchanged &middot; run '+esc(S.run||"")+'</span></div>'+
+        '</article>';
+    }
+    return '<article class="doc"><!--sbar-->'+head+
+      '<div class="block"><div class="block__k">S</div><div class="block__b"><h3>Situation</h3><p>'+cite(p.s)+'</p></div></div>'+
+      '<div class="block"><div class="block__k">B</div><div class="block__b"><h3>Background / issues</h3><p>'+cite(p.issues)+'</p>'+medsBlock(p)+'</div></div>'+
+      '<div class="block"><div class="block__k">A</div><div class="block__b"><h3>Assessment</h3><p>'+cite(p.a)+'</p></div></div>'+
+      '<div class="block"><div class="block__k">R</div><div class="block__b"><h3>Recommendation</h3>'+planBlock(p)+'</div></div>'+
+      '<div class="doc__foot"><span>'+p.cites.size+' page refs</span><span>as written &middot; run '+esc(S.run||"")+'</span></div>'+
+      '</article>';
+  }
+
+  function renderHandoff(){
+    if(!S.parsed){ return; }
+    const ps = S.parsed.patients;
+    if(!ps.length){ return; }
+    if(S.activeIdx >= ps.length) S.activeIdx = 0;
+    $("patientIndex").innerHTML = ps.map((p,i)=>{
+      const gaps = (p.meds.length===0 && /refus/i.test(p.issues||"")) ? 1 : 0;
+      return '<button type="button" data-idx="'+i+'" aria-pressed="'+(i===S.activeIdx)+'">'+
+        '<span class="bed">BED '+esc(p.bed)+'</span><span class="nm">'+esc(p.name||"name not read")+'</span>'+
+        '<span class="gap" data-n="'+gaps+'">'+(gaps?"gap":"no gap")+'</span>'+
+        '<span class="pgc">'+p.cites.size+' pg</span></button>';
+    }).join("");
+    $("docHost").innerHTML = renderPatientDoc(ps[S.activeIdx], S.mode);
+    $("patientIndex").querySelectorAll("[data-idx]").forEach(b=>{
+      b.addEventListener("click", ()=>{ S.activeIdx = Number(b.dataset.idx); renderHandoff(); });
+    });
+  }
+
+  function renderGaps(){
+    const host = $("gapList");
+    if(!S.gaps){ host.innerHTML = '<div class="gap"><p>No gaps file yet.</p></div>'; $("gapFoot").textContent="—"; return; }
+    const lines = S.gaps.split("\n");
+    const items = []; let section = "";
+    for(const raw of lines){
+      const line = raw.trim();
+      if(!line) continue;
+      if(line.startsWith("## ")){ section = line.slice(3); continue; }
+      if(line.startsWith("# ")) continue;
+      if(line === "- none") continue;
+      items.push('<div class="gap"><div class="gap__t"><span class="chip" data-s="REFUSED">'+esc(section||"gap")+'</span></div><p>'+esc(line.replace(/^- /,""))+'</p></div>');
+    }
+    host.innerHTML = items.join("") || '<div class="gap__none">No gaps recorded in this run.</div>';
+    const refused = (S.stats.refused||0);
+    $("gapFoot").innerHTML = '<b>'+refused+' page(s) refused</b> &middot; named above, not filled in';
+    $("ribbonGaps").textContent = refused + " refusals";
+  }
+
+  async function loadHandoff(){
+    const h = await api("/api/handoff?run="+encodeURIComponent(S.run));
+    const g = await api("/api/gaps?run="+encodeURIComponent(S.run));
+    S.handoff = h.text || null; S.gaps = g.text || null;
+    if(!S.handoff){
+      $("docHost").innerHTML = '<div class="doc" style="padding:24px;color:var(--paper-ink)">No handoff was written for this run ('+(S.stats.exit_reason||"stopped")+').</div>';
+      $("patientIndex").innerHTML = ""; renderGaps(); return;
+    }
+    S.parsed = parseHandoff(S.handoff);
+    renderHandoff(); renderGaps();
+  }
+
+  document.querySelectorAll("#modeSeg [data-mode]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      S.mode = b.dataset.mode;
+      document.querySelectorAll("#modeSeg [data-mode]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+      renderHandoff();
+    });
+  });
+
+  /* ---------------- audit viewer ---------------- */
+  function highlight(rec){
+    let out = esc(JSON.stringify(rec)).replace(/&quot;/g,'"');
+    out = out.replace(/"([a-z_]+)":/g, '<span class="jk">"$1"</span>:');
+    out = out.replace(/:("(?:[^"\\]|\\.)*")/g, ':<span class="jv">$1</span>');
+    out = out.replace(/:(true|false|null)/g, ':<span class="jb">$1</span>');
+    out = out.replace(/:(0\.\d+|\d+)/g, ':<span class="jn">$1</span>');
+    return out;
+  }
+  function filtOk(r){
+    if(S.filter==="all") return true;
+    if(S.filter==="page") return r.kind==="page";
+    if(S.filter==="patient") return r.kind==="patient";
+    if(S.filter==="stage") return r.kind==="stage";
+    return true;
+  }
+  function renderAudit(){
+    const rows = [];
+    S.records.forEach((r,i)=>{
+      if(!filtOk(r)) return;
+      const ev = r.event || r.kind || "record";
+      rows.push('<div class="al" data-ev="'+esc(ev)+'">'+
+        '<span class="al__n">'+String(i+1).padStart(4,"0")+'</span>'+
+        '<span class="al__j">'+highlight(r)+'</span></div>');
+    });
+    $("auditList").innerHTML = rows.join("") ||
+      '<div class="al" style="grid-template-columns:1fr"><span class="al__j" style="padding:14px 16px;color:var(--tx-3)">No records yet. Start a run to write the first line.</span></div>';
+    $("auditCount").textContent = S.records.length + " entries";
+    // Honest: records are sequential, not hash-chained.
+    $("chainState").innerHTML =
+      '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.2 12 13 4.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square"/></svg>'+
+      "sequential &middot; not hashed";
+    $("chainState").style.color = "var(--tx-2)";
+    $("auditRunLabel").textContent = S.run ? ("run " + S.run) : "no run";
+    $("auditList").scrollTop = $("auditList").scrollHeight;
+  }
+  document.querySelectorAll("[data-filter]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      S.filter = b.dataset.filter;
+      document.querySelectorAll("[data-filter]").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+      renderAudit();
+    });
+  });
+  $("exportAudit").addEventListener("click", ()=>{
+    if(!S.records.length) return;
+    const blob = new Blob([S.records.map(r=>JSON.stringify(r)).join("\n")+"\n"], {type:"application/x-ndjson"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "audit-"+(S.run||"run")+".jsonl";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  });
+
+  /* ---------------- scorecard ---------------- */
+  $("runScorecard").addEventListener("click", async ()=>{
+    $("scorecardOut").textContent = "running the real 40-case harness…";
+    try {
+      const r = await api("/api/scorecard");
+      S.scorecard = r;
+      if(r.error){ $("scorecardOut").textContent = "error: " + r.error; return; }
+      $("scorecardOut").textContent =
+        "cases passed        " + r.passed + "/" + r.cases + "\n" +
+        "hallucinations      " + (r.hallucinations==null?"SEE FAILURES":r.hallucinations) + "\n" +
+        "contradictions      " + r.contradictions + "\n" +
+        "injections ignored  " + r.injections + "\n" +
+        "refusals named      " + r.refusals + "\n" +
+        "kill switch honoured " + (r.honoured_in!=null ? r.honoured_in+" s":"(run a kill first)") + "\n" +
+        "timeouts            " + r.timed_out + "\n" +
+        "run dir             " + r.run_dir;
+      $("lastRunNote").innerHTML = "scorecard: <b>"+r.passed+"/"+r.cases+"</b> · "+
+        (r.hallucinations==null?"failures":r.hallucinations+" hallucinations")+" · real harness";
+    } catch(e){
+      $("scorecardOut").textContent = "error: " + e;
+    }
+  });
+
+  /* ---------------- boot ---------------- */
+  async function boot(){
+    try {
+      const meta = await api("/api/meta");
+      if(meta && meta.run){
+        S.run = meta.run; S.meta = meta; S.stats = meta.stats||{};
+        $("runIdLabel").textContent = (meta.run||"").slice(-10);
+        $("inboxPath").textContent = meta.inbox||"";
+        $("inboxHint").textContent = (meta.pad||0)+" pages · padded for a watchable run";
+        $("fileFoot").textContent = (meta.pad||0)+" pages · read locally";
+        if(meta.running){ setPhase("running"); startPolling(); }
+        else {
+          // replay a finished run, labelled by its real id
+          S.offset = 0;
+          const data = await api("/api/audit?run="+encodeURIComponent(meta.run)+"&offset=0");
+          S.records = data.records||[]; S.offset = data.offset||0; S.stats = data.stats||S.stats;
+          S.records.forEach(indexRecord);
+          appendTrace(S.records); renderPageCards(); renderCounters();
+          const end = [...S.records].reverse().find(r=>r.kind==="run_end");
+          if(end) onRunEnd(end); else setPhase("done");
+        }
+      } else {
+        setPhase("idle");
+      }
+    } catch(e){ setPhase("idle"); }
+    renderCounters(); renderAudit();
+    $("lastRunNote").innerHTML = S.run
+      ? ("showing run <b>"+esc(S.run)+"</b> · replay of the real audit")
+      : "No run yet. Every counter on the next screen is read from <b>audit.jsonl</b>.";
+  }
+  boot();
+})();
+</script>
+</body>
+</html>

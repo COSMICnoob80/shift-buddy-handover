@@ -13,6 +13,7 @@ import argparse
 import importlib
 import json
 import os
+import re
 import sys
 import time
 from datetime import datetime
@@ -30,6 +31,21 @@ PINNED = (
     ("compose", "compose_gaps"),
     ("verify", "verify"),
 )
+
+
+_PAGE_NAME = re.compile(r"^handoff_\d{4}-\d{2}-\d{2}_\d+(?:\.[A-Za-z0-9]+)?$")
+
+
+def _count_pages(inbox: Path) -> int:
+    """Cheap filename count so the live banner can show the real total at once."""
+    try:
+        return sum(
+            1
+            for entry in os.scandir(inbox)
+            if entry.is_file() and _PAGE_NAME.match(entry.name)
+        )
+    except OSError:
+        return 0
 
 
 def _now() -> str:
@@ -178,15 +194,61 @@ def _run_once(
     modules = _load_modules()
     started_at = _now()
     stop = ks.check if ks is not None else None
+    model = _model_label()
+
+    # When the shift date is known (the console always passes --date), open the
+    # audit before the slow ingest so the live view sees real records while
+    # pages are still being read. Without a date we keep the original order.
+    run_id = _now()
+    early_out = out_root / date_override if date_override else None
+    audit = None
+    if early_out is not None:
+        audit = Audit(str(early_out), root=str(out_root))
+        audit.event(
+            run_id,
+            "run_begin",
+            shift=_shift(early_out.name),
+            model=model,
+            inbox=str(inbox),
+            page_count=_count_pages(inbox),
+        )
+
+    def on_page(record: dict) -> None:
+        if audit is None:
+            return
+        decision = "read" if record.get("readable") else "refuse"
+        audit.event(
+            run_id,
+            "page",
+            event=f"page.{decision}",
+            page=record.get("page"),
+            page_kind=record.get("kind"),
+            readable=record.get("readable"),
+            sha256=record.get("sha256"),
+            refusal_reason=record.get("refusal_reason"),
+            text_len=len(record.get("text") or ""),
+            ocr_confidence=record.get("ocr_confidence"),
+            decision=decision,
+        )
 
     try:
-        pages_doc = modules["ingest"](str(inbox), stop=stop)
+        pages_doc = modules["ingest"](
+            str(inbox),
+            stop=stop,
+            on_page=on_page if audit is not None else None,
+            run_id=run_id,
+        )
     except Exception as exc:
         out_dir = out_root / (date_override or _today())
-        audit = Audit(str(out_dir), root=str(out_root))
-        audit.run_start(_now(), _shift(out_dir.name), [], _model_label())
+        if audit is None:
+            audit = Audit(str(out_dir), root=str(out_root))
+            audit.run_start(run_id, _shift(out_dir.name), [], model)
+        audit.event(
+            run_id, "stage", event="stage.error", stage="ingest",
+            detail=f"{type(exc).__name__}: {exc}",
+        )
         audit.run_end(
-            _now(), "error", {"stage": "ingest", "error": f"{type(exc).__name__}: {exc}"}
+            run_id, "error", {"stage": "ingest", "error": f"{type(exc).__name__}: {exc}"}
         )
         audit.close()
         print(f"ingest failed: {type(exc).__name__}: {exc}", file=sys.stderr)
@@ -194,12 +256,15 @@ def _run_once(
 
     pages = pages_doc.get("pages") or []
     shift_date = date_override or pages_doc.get("shift_date") or _today()
-    run_id = pages_doc.get("run_id") or started_at
+    run_id = pages_doc.get("run_id") or run_id
     out_dir = out_root / shift_date
-    audit = Audit(str(out_dir), root=str(out_root))
-    model = _model_label()
+    if audit is None:
+        audit = Audit(str(out_dir), root=str(out_root))
     shift = _shift(shift_date)
     audit.run_start(run_id, shift, pages, model)
+
+    def stage(name: str, status: str, detail=None) -> None:
+        audit.event(run_id, "stage", event=f"stage.{status}", stage=name, detail=detail)
 
     state = {
         "run_id": run_id,
@@ -255,8 +320,9 @@ def _run_once(
         stop_fields = ks.audit_fields() if ks is not None else None
         status = _status_record(state, exit_reason, verify, stop_fields)
         audit.safe_write(out_dir / "status.json", json.dumps(status, indent=2, default=str))
-        for patient in state["patients"]:
-            audit.patient(state["run_id"], patient)
+        if not state.get("patients_audited"):
+            for patient in state["patients"]:
+                audit.patient(state["run_id"], patient)
         audit.run_end(
             state["run_id"],
             exit_reason,
@@ -278,6 +344,7 @@ def _run_once(
         finish("stopped", None, None)
         return 0
 
+    stage("extract", "start")
     try:
         fields_doc = modules["extract"](pages_doc)
         state["unreadable_pages"] = _unreadable_pages(pages, fields_doc)
@@ -285,10 +352,12 @@ def _run_once(
     except Exception as exc:
         finish("error", None, {"ok": None, "violations": [f"extract: {exc}"]})
         return 1
+    stage("extract", "end", f"{len(fields_doc.get('pages') or [])} pages parsed")
     if _tripped(ks):
         finish("stopped", None, None)
         return 0
 
+    stage("structure", "start")
     try:
         struct_doc = modules["structure"](fields_doc, run_start=started_at)
         state["patients"] = [
@@ -300,10 +369,12 @@ def _run_once(
     except Exception as exc:
         finish("error", None, {"ok": None, "violations": [f"structure: {exc}"]})
         return 1
+    stage("structure", "end", f"{len(state['patients'])} patients")
     if _tripped(ks):
         finish("stopped", None, None)
         return 0
 
+    stage("rules", "start")
     try:
         rules_doc = modules["apply"](state["patients"], state["injections"])
         state["patients"] = [
@@ -317,10 +388,24 @@ def _run_once(
     except Exception as exc:
         finish("error", None, {"ok": None, "violations": [f"rules: {exc}"]})
         return 1
+    stage(
+        "rules", "end",
+        f"{len(state['contradictions'])} contradictions, {len(state['gaps'])} gaps",
+    )
     if _tripped(ks):
         finish("stopped", None, None)
         return 0
 
+    # Final patient facts are known here; append them now so the live view
+    # counts patients before compose/verify finish.
+    for patient in state["patients"]:
+        audit.patient(run_id, patient)
+    state["patients_audited"] = True
+    if _tripped(ks):
+        finish("stopped", None, None)
+        return 0
+
+    stage("compose", "start")
     try:
         handoff_text, _allowed = modules["compose"](
             state["patients"], state["contradictions"], state["shift"]
@@ -328,15 +413,18 @@ def _run_once(
     except Exception as exc:
         finish("error", None, {"ok": None, "violations": [f"compose: {exc}"]})
         return 1
+    stage("compose", "end", f"{len(state['patients'])} SBAR blocks")
     if _tripped(ks):
         finish("stopped", None, None)
         return 0
 
+    stage("verify", "start")
     try:
         ok, violations = modules["verify"](handoff_text, summary_doc())
     except Exception as exc:
         finish("error", None, {"ok": None, "violations": [f"verify: {exc}"]})
         return 1
+    stage("verify", "end", f"ok={bool(ok)} violations={len(violations or [])}")
     verify_result = {"ok": bool(ok), "violations": list(violations or [])}
 
     if not verify_result["ok"]:

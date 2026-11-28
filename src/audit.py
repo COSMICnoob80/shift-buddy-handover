@@ -92,6 +92,22 @@ class Audit:
 
     # ------------------------------------------------------------- public API
 
+    def event(self, run_id: str, kind: str, **fields) -> None:
+        """Append one real, timestamped trace record.
+
+        Used for the live view: ``run_begin`` (the run is live, before the slow
+        ingest), ``page`` as each page is read, ``stage`` around each pipeline
+        stage. Every field comes from the work actually done at that instant.
+        """
+        record = {
+            "v": AUDIT_VERSION,
+            "kind": kind,
+            "run_id": run_id,
+            "ts": _now_precise(),
+        }
+        record.update(fields)
+        self._append(record)
+
     def run_start(self, run_id: str, shift: dict, pages: list, model: str) -> None:
         started = _now_precise()
         self._starts[run_id] = (started, datetime.now().timestamp())

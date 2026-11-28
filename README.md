@@ -6,7 +6,14 @@ list out, unattended, on one machine, with a kill switch.**
 Agentware 2026 · open track · solo. All product code in this repo was written inside the
 72-hour window (kickoff Fri 27 Nov 2026 23:00 PKT).
 
-**Demo video (2 minutes, real terminal run):** [demo/shift-buddy-handover-demo.mp4](https://github.com/COSMICnoob80/shift-buddy-handover/blob/master/demo/shift-buddy-handover-demo.mp4)
+**Demo video (1:09, live console — real run, real kill switch):** [demo/shift-buddy-handover-demo-gui.mp4](https://github.com/COSMICnoob80/shift-buddy-handover/blob/master/demo/shift-buddy-handover-demo-gui.mp4)
+
+**Same run, terminal view (1:52):** [demo/shift-buddy-handover-demo.mp4](https://github.com/COSMICnoob80/shift-buddy-handover/blob/master/demo/shift-buddy-handover-demo.mp4) — the GUI video above is the primary demo; this one is the same pipeline seen in the terminal.
+
+The GUI video was captured from the real console: headless Chrome rendering the live page
+(offscreen, no Xvfb), a real run started from the Start button, the kill switch written as a
+real `STOP` file mid-run, and the real `handoff.md` rendered in both display modes. Every
+number on screen is read from the run's actual `audit.jsonl`; nothing on the page is mocked.
 
 **One committed run, unedited (the trace):** [`traces/2026-11-28-demo/`](traces/2026-11-28-demo/) — 9 pages in,
 15 patients out, `audit.jsonl` with a sha256 per input page, `handoff.md`, `gaps.md`, `summary.json`.
@@ -54,6 +61,19 @@ bash tools/make_demo.sh                   # the full demo, end to end, in ~3 s
 
 Those four commands are the whole cold run. Measured on a fresh clone: clone 0.06 s, tests
 4.1 s, scorecard ~11 s, demo ~3 s.
+
+## Live console (the GUI demo)
+
+```bash
+.venv/bin/python tools/console.py            # http://127.0.0.1:8777/  (default port)
+.venv/bin/python tools/console.py --port 8781 --pad 4000
+```
+
+A viewer/launcher, not a simulator: it starts the real pipeline on demand and tails that run's
+real `audit.jsonl`. Start a run, watch the trace and counters, fire the kill switch (which
+writes the real `STOP` file the run polls), and read the resulting `handoff.md` in two display
+modes (SBAR and Ward). The port is configurable with `--port` (default **8777**); `--pad` sets
+the inbox page count for a run long enough to interrupt. Standard library only, localhost only.
 
 ## The numbers, and where they come from
 

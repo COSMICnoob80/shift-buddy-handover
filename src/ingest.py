@@ -215,8 +215,13 @@ def _page_record(path: str, name: str, page_no: int, order: int, inbox_dir: str)
     return record
 
 
-def ingest(inbox_dir: str, *, stop=None) -> dict:
-    """Enumerate the inbox and return the pages document of §2."""
+def ingest(inbox_dir: str, *, stop=None, on_page=None, run_id: str | None = None) -> dict:
+    """Enumerate the inbox and return the pages document of §2.
+
+    ``on_page`` is called with each page record the instant it is read, so the
+    live console can append a real ``page`` audit record while ingest is still
+    running. ``run_id`` lets that stream share the run id of the final document.
+    """
     if not os.path.isdir(inbox_dir):
         raise FileNotFoundError(f"inbox directory not found: {inbox_dir}")
 
@@ -263,10 +268,16 @@ def ingest(inbox_dir: str, *, stop=None) -> dict:
                     break
             except Exception:
                 pass
-        pages.append(_page_record(path, name, seq, index + 1, inbox_dir))
+        record = _page_record(path, name, seq, index + 1, inbox_dir)
+        pages.append(record)
+        if on_page is not None:
+            try:
+                on_page(record)
+            except Exception:
+                pass
 
     document = {
-        "run_id": _now(),
+        "run_id": run_id or _now(),
         "shift_date": shift_date,
         "pages": pages,
     }
