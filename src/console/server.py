@@ -8,6 +8,7 @@ Endpoints
 ---------
 GET  /                     the console page
 GET  /console.css          the reused visual base
+GET  /healthz              hosted-demo health check (synthetic data only)
 GET  /api/meta?run=ID      run metadata + live counters (from audit records)
 GET  /api/audit?run&offset returns audit records appended since ``offset``
 GET  /api/status?run       the real status.json (or null)
@@ -337,6 +338,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._file("page.html", "text/html; charset=utf-8")
         if path == "/console.css":
             return self._file("console.css", "text/css; charset=utf-8")
+        if path == "/healthz":
+            return self._send({"ok": True, "mode": "hosted-demo", "data": "synthetic-only"})
         if path == "/api/meta":
             run = _resolve(q.get("run"))
             if run is None:

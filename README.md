@@ -73,7 +73,13 @@ A viewer/launcher, not a simulator: it starts the real pipeline on demand and ta
 real `audit.jsonl`. Start a run, watch the trace and counters, fire the kill switch (which
 writes the real `STOP` file the run polls), and read the resulting `handoff.md` in two display
 modes (SBAR and Ward). The port is configurable with `--port` (default **8777**); `--pad` sets
-the inbox page count for a run long enough to interrupt. Standard library only, localhost only.
+the inbox page count for a run long enough to interrupt. Standard library only; binds localhost
+by default.
+
+**Hosted demo:** [`DEPLOY.md`](DEPLOY.md) — a one-click Render plain Web Service (six fields,
+Free instance, no keys). A hosted instance contains **zero real patient data**: the text lane
+there runs synthetic fixtures only, the assisted lane stays off, and the real product never
+leaves the operator's machine.
 
 ## The numbers, and where they come from
 
