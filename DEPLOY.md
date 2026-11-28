@@ -1,5 +1,11 @@
 # Hosted demo — one-click deploy (Render, plain Web Service)
 
+> **THE ONE FIELD THAT BREAKS THE BUILD:** on the Render form, the Build Command box
+> comes pre-filled with `pip install -r requirements.txt`. **DELETE that — leave the
+> field EMPTY.** There is no requirements.txt (this project is standard-library only);
+> leaving the pip default makes the deploy fail after a few minutes. Everything else on
+> the form can stay as filled.
+
 This is the **look-and-run demo**, not the product. It is the same console and the same
 pipeline as the local one, running on synthetic fixture pages. One thing is different: on a
 hosted instance **only the text lane exists** (standard library only — no OCR install, no cloud
@@ -15,14 +21,14 @@ Service on the Free instance type is enough and needs no payment details.
 Dashboard → **New +** → **Web Service** → connect the `shift-buddy-handover` repo, then fill
 these six fields exactly:
 
-| # | Field | Value |
-|---|-------|-------|
-| 1 | **Name** | `shift-buddy-handover` (any name) |
-| 2 | **Language / Runtime** | `Python 3` |
-| 3 | **Build Command** | *(leave empty)* |
-| 4 | **Start Command** | `python tools/console.py --host 0.0.0.0 --port $PORT` |
-| 5 | **Instance Type** | `Free` |
-| 6 | **Environment Variables** | *(none required)* |
+| #   | Field                     | Value                                                 |
+| --- | ------------------------- | ----------------------------------------------------- |
+| 1   | **Name**                  | `shift-buddy-handover` (any name)                     |
+| 2   | **Language / Runtime**    | `Python 3`                                            |
+| 3   | **Build Command**         | *(leave empty)*                                       |
+| 4   | **Start Command**         | `python tools/console.py --host 0.0.0.0 --port $PORT` |
+| 5   | **Instance Type**         | `Free`                                                |
+| 6   | **Environment Variables** | *(none required)*                                     |
 
 Then **Create Web Service**. First deploy takes a couple of minutes; the log ends with
 `Shift Buddy console on http://0.0.0.0:<port>/  (pad=9000)` and the health check passes.
